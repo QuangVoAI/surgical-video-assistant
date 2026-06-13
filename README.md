@@ -111,6 +111,24 @@ python -m src.models.train_sft --config configs/gemma4_12b_lora_quick.yaml
 
 The quick configs are intended for limited VM credit. They train a LoRA adapter on a subset and save logs, checkpoints, and `reports/figures/training_loss.png`.
 
+For a stronger but still fast experiment, use a video-level subset so train and eval come from different procedures:
+
+```bash
+python scripts/make_fast_subset.py \
+  --input data/processed/cholec50_qa.jsonl \
+  --out data/processed/processed_dataset_video_subset.jsonl \
+  --train-videos VID05 VID08 VID10 VID12 VID15 VID18 \
+  --eval-videos VID01 VID04 VID13 \
+  --train-per-task 400 \
+  --eval-per-task 100 \
+  --require-images
+
+python scripts/preflight_train.py --config configs/gemma4_12b_lora_video_subset.yaml
+python -m src.models.train_sft --config configs/gemma4_12b_lora_video_subset.yaml
+```
+
+This is the recommended presentation setup when full CholecT50 training is too expensive. It does not claim full leaderboard performance, but it avoids frame overlap between train and eval videos.
+
 ## Notebook for Presentation
 
 Open [notebooks/Surgical_Video_Assistant_Training.ipynb](notebooks/Surgical_Video_Assistant_Training.ipynb) on Colab or a GPU VM. It includes:

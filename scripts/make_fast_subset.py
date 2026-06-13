@@ -20,6 +20,8 @@ def main() -> None:
     parser.add_argument("--out", type=Path, required=True, help="Output subset JSONL.")
     parser.add_argument("--train-per-task", type=int, default=300)
     parser.add_argument("--eval-per-task", type=int, default=80)
+    parser.add_argument("--train-videos", nargs="*", default=None, help="Optional video IDs for training, e.g. VID05 VID08.")
+    parser.add_argument("--eval-videos", nargs="*", default=None, help="Optional video IDs for validation/test.")
     parser.add_argument("--seed", type=int, default=13)
     parser.add_argument("--require-images", action="store_true")
     args = parser.parse_args()
@@ -28,6 +30,8 @@ def main() -> None:
     samples = read_samples(args.input)
     if args.require_images:
         samples = [sample for sample in samples if Path(sample.image_path).exists()]
+    if args.train_videos or args.eval_videos:
+        samples = filter_by_videos(samples, set(args.train_videos or []), set(args.eval_videos or []))
 
     buckets = defaultdict(list)
     for sample in samples:
@@ -55,9 +59,22 @@ def summarize(samples) -> dict:
         "num_samples": len(samples),
         "by_split": Counter(sample.split for sample in samples),
         "by_task_type": Counter(sample.task_type for sample in samples),
+        "by_video": Counter((sample.metadata or {}).get("video_id", "unknown") for sample in samples),
         "missing_images": sum(1 for sample in samples if not Path(sample.image_path).exists()),
         "examples": [sample.to_json() for sample in samples[:3]],
     }
+
+
+def filter_by_videos(samples, train_videos: set[str], eval_videos: set[str]):
+    selected = []
+    for sample in samples:
+        video_id = str((sample.metadata or {}).get("video_id", ""))
+        if sample.split == "train" and train_videos and video_id not in train_videos:
+            continue
+        if sample.split != "train" and eval_videos and video_id not in eval_videos:
+            continue
+        selected.append(sample)
+    return selected
 
 
 if __name__ == "__main__":
