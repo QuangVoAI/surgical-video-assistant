@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import argparse
+import math
 import sys
 from pathlib import Path
 
@@ -98,7 +99,7 @@ def predict(
             (score_answer(model, processor, image, prompt, answer), answer)
             for answer in candidate_answers
         ]
-        scored.sort(key=lambda item: item[0])
+        scored.sort(key=lambda item: item[0] if math.isfinite(item[0]) else float("inf"))
         best_score, best_answer = scored[0]
         print("scores:")
         for score, answer in scored[:10]:
