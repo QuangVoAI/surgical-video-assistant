@@ -7,6 +7,9 @@ __pycache__/
 venv/
 data/raw/*
 data/processed/*
+checkpoints/
+*.tar
+*.tar.gz
 reports/*.json
 reports/*.jsonl
 reports/*.csv
@@ -14,3 +17,5 @@ reports/*.csv
 !data/processed/.gitkeep
 !data/processed/*.example.jsonl
 !reports/.gitkeep
+!reports/final/
+!reports/final/**
