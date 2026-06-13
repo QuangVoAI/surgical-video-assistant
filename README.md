@@ -29,6 +29,14 @@ This installs the libraries needed for dataset preparation, Hugging Face inferen
 Prepare SurgMLLMBench raw JSON/JSONL files after downloading them into `data/raw/SurgMLLMBench`:
 
 ```bash
+python scripts/download_hf_dataset.py \
+  --repo-id introvoyz041/SurgMLLMBench \
+  --local-dir data/raw/SurgMLLMBench
+```
+
+Then normalize the downloaded raw files:
+
+```bash
 python -m src.data.prepare --dataset surgmllmbench --raw data/raw/SurgMLLMBench --out data/processed
 ```
 
