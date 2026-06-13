@@ -167,6 +167,43 @@ python -m src.data.prepare --dataset ssg-vqa --raw data/raw/SSG-VQA --out data/p
 
 The public SSG-VQA repo provides QA pairs and pre-extracted visual features. Raw frames still come from CholecT45/Cholec80 access, so preflight will continue to fail for Gemma image training until the corresponding images are placed under `data/raw/SSG-VQA/images/VIDxx/000001.jpg` or another path resolvable by the parser.
 
-CholecT50/CholecT45 can be used as a secondary benchmark after CAMMA access is granted. The included parser supports simple frame-level CSV/JSONL exports and turns labels into QA-style records.
+CholecT50/CholecT45 is now the recommended image-backed training path once CAMMA access is granted. SurgMLLMBench and SSG-VQA are useful for VQA/task design, but their public downloads may not include raw frames. CholecT50 release 2.0 provides the frame images and frame-wise labels needed for Gemma image training.
+
+After downloading the dataset from the access email, copy the archive to the VM and unpack it so the folder looks like this:
+
+```text
+data/raw/CholecT50/
+  videos/
+    VID01/
+      000001.png
+  labels/
+    VID01.json
+  label_mapping.txt
+  README.md
+```
+
+Then prepare the frame-level QA dataset:
+
+```bash
+python -m src.data.prepare \
+  --dataset cholec \
+  --raw data/raw/CholecT50 \
+  --out data/processed
+```
+
+The native CholecT50 parser reads `labels/VIDxx.json`, maps each frame to `videos/VIDxx/000001.png`, and creates four QA tasks:
+
+- phase recognition: `What surgical phase is shown?`
+- tool recognition: `Which surgical instruments are visible?`
+- action recognition: `What surgical actions are visible?`
+- triplet recognition: `What surgical action triplets <instrument, verb, target> are visible?`
+
+It uses the official CholecT50 cross-validation fold 1 as the default split, with a held-out validation subset from the remaining folds. Run this before training:
+
+```bash
+python scripts/preflight_train.py --config configs/gemma4_12b_lora_sft.yaml
+```
+
+If the browser download shows `Zero KB` or `stopped`, the archive has not downloaded correctly yet. Restart the download from the one-time access page, wait until the full archive finishes, then copy the completed file to the VM.
 
 This project is for research and education only. It is not clinical decision support.
