@@ -13,8 +13,7 @@ def parse_ssg_vqa(raw_root: Path) -> Iterator[SurgicalSample]:
             continue
         video_id = text_file.parent.name
         frame_id = text_file.stem
-        image_value = candidate_frame_path(video_id, frame_id)
-        image_path = resolve_image_path(raw_root, image_value, text_file)
+        image_value, image_path = resolve_ssg_image(raw_root, video_id, frame_id, text_file)
         split = infer_ssg_split(video_id)
         for line_index, line in enumerate(text_file.read_text(encoding="utf-8", errors="replace").splitlines()):
             parsed = parse_qa_line(line)
@@ -73,8 +72,27 @@ def parse_qa_line(line: str) -> tuple[str, str, dict] | None:
 
 
 def candidate_frame_path(video_id: str, frame_id: str) -> str:
+    return candidate_frame_paths(video_id, frame_id)[0]
+
+
+def candidate_frame_paths(video_id: str, frame_id: str) -> list[str]:
     frame_number = frame_id.zfill(6)
-    return f"images/{video_id}/{frame_number}.jpg"
+    return [
+        f"images/{video_id}/{frame_number}.jpg",
+        f"images/{video_id}/{frame_number}.png",
+        f"videos/{video_id}/{frame_number}.png",
+        f"videos/{video_id}/{frame_number}.jpg",
+    ]
+
+
+def resolve_ssg_image(raw_root: Path, video_id: str, frame_id: str, text_file: Path) -> tuple[str, str]:
+    candidates = candidate_frame_paths(video_id, frame_id)
+    for image_value in candidates:
+        image_path = resolve_image_path(raw_root, image_value, text_file)
+        if Path(image_path).exists():
+            return image_value, image_path
+    image_value = candidates[0]
+    return image_value, resolve_image_path(raw_root, image_value, text_file)
 
 
 def infer_ssg_split(video_id: str) -> str:
