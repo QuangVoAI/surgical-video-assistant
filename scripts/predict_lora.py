@@ -10,7 +10,8 @@ if str(PROJECT_ROOT) not in sys.path:
 
 from PIL import Image
 
-from src.models.prompts import system_prompt
+from src.data.schema import SurgicalSample, infer_task_type
+from src.models.prompts import build_prompt, system_prompt
 from src.models.providers import load_multimodal_model
 
 
@@ -19,15 +20,17 @@ def main() -> None:
     parser.add_argument("--checkpoint", type=Path, required=True, help="LoRA adapter checkpoint or final adapter folder.")
     parser.add_argument("--image", type=Path, required=True)
     parser.add_argument("--question", required=True)
+    parser.add_argument("--task-type", default="", help="Optional task type: phase, tool_type, action, triplet, vqa.")
     parser.add_argument("--model", default="google/gemma-4-12B")
     parser.add_argument("--processor", default="google/gemma-4-12B-it")
-    parser.add_argument("--max-new-tokens", type=int, default=64)
+    parser.add_argument("--max-new-tokens", type=int, default=24)
     args = parser.parse_args()
 
     answer = predict(
         checkpoint=args.checkpoint,
         image_path=args.image,
         question=args.question,
+        task_type=args.task_type,
         model_name=args.model,
         processor_name=args.processor,
         max_new_tokens=args.max_new_tokens,
@@ -39,6 +42,7 @@ def predict(
     checkpoint: Path,
     image_path: Path,
     question: str,
+    task_type: str,
     model_name: str,
     processor_name: str,
     max_new_tokens: int,
@@ -68,11 +72,18 @@ def predict(
     model.eval()
 
     image = Image.open(image_path).convert("RGB")
-    prompt = (
-        "Task: answer the visual question about this surgical frame. "
-        "Keep the answer concise and use surgical dataset labels when possible.\n\n"
-        f"Question: {question}\nAnswer:"
+    task_type = task_type or infer_task_type(question)
+    sample = SurgicalSample(
+        sample_id="demo",
+        dataset="demo",
+        image_path=str(image_path),
+        question=question,
+        answer="",
+        task_type=task_type,
+        split="demo",
+        metadata={},
     )
+    prompt = build_prompt(sample, include_system=False)
     messages = [
         {"role": "system", "content": system_prompt()},
         {
@@ -99,6 +110,10 @@ def predict(
             **inputs,
             max_new_tokens=max_new_tokens,
             do_sample=False,
+            repetition_penalty=1.15,
+            no_repeat_ngram_size=3,
+            eos_token_id=processor.tokenizer.eos_token_id,
+            pad_token_id=processor.tokenizer.pad_token_id,
         )
     prompt_length = inputs["input_ids"].shape[-1]
     generated = output_ids[0][prompt_length:]
