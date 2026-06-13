@@ -8,6 +8,7 @@ import yaml
 from tqdm import tqdm
 
 from src.data.io import read_samples
+from src.models.answer_space import attach_answer_spaces, build_answer_spaces, constrain_prediction
 from src.models.prompts import build_prompt, select_few_shot_examples
 from src.models.providers import build_provider
 
@@ -24,11 +25,17 @@ def main() -> None:
     max_samples = config["data"].get("max_samples")
     few_shot_k = int(config.get("prompt", {}).get("few_shot_k") or 0)
     prompt_type = config.get("prompt", {}).get("prompt_type") or ("few_shot" if few_shot_k else "zero_shot")
+    use_answer_space = bool(config.get("prompt", {}).get("use_answer_space", True))
 
     samples = read_samples(input_jsonl)
     if max_samples:
         samples = samples[: int(max_samples)]
     train_samples = read_samples(train_jsonl) if few_shot_k else []
+    answer_spaces = build_answer_spaces(train_samples or samples) if use_answer_space else {}
+    if answer_spaces:
+        samples = attach_answer_spaces(samples, answer_spaces)
+        if train_samples:
+            train_samples = attach_answer_spaces(train_samples, answer_spaces)
     few_shot = select_few_shot_examples(train_samples, samples, few_shot_k) if few_shot_k else {}
 
     provider = build_provider(config["model"])
@@ -39,6 +46,7 @@ def main() -> None:
             examples = few_shot.get(sample.sample_id, [])
             prompt = build_prompt(sample, examples)
             prediction = provider.generate(sample, prompt)
+            prediction = constrain_prediction(sample.task_type, prediction, answer_spaces)
             row = {
                 "sample_id": sample.sample_id,
                 "dataset": sample.dataset,

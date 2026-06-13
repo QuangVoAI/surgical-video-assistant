@@ -1,6 +1,6 @@
 model:
   provider: transformers
-  name: google/gemma-4-12B-it
+  name: google/gemma-4-26B-A4B-it
   device: auto
   max_new_tokens: 64
 
@@ -15,4 +15,4 @@ prompt:
   use_answer_space: true
 
 output:
-  predictions_jsonl: reports/predictions_gemma4_zero_shot.jsonl
+  predictions_jsonl: reports/predictions_gemma4_26b_zero_shot.jsonl

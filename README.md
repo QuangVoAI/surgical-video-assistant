@@ -24,6 +24,8 @@ Install the base dependencies:
 python -m pip install -r requirements.txt
 ```
 
+This installs the libraries needed for dataset preparation, Hugging Face inference, reporting charts, the Streamlit demo, and local tests.
+
 Prepare SurgMLLMBench raw JSON/JSONL files after downloading them into `data/raw/SurgMLLMBench`:
 
 ```bash
@@ -62,7 +64,19 @@ Then run LoRA/QLoRA supervised fine-tuning on normalized frame-level QA records:
 python -m src.models.train_sft --config configs/gemma4_lora_sft.yaml
 ```
 
-This trains on image-frame QA pairs only. It does not train a full temporal video model.
+This trains on image-frame QA pairs only. It does not train a full temporal video model. The training config now expects split-aware JSONL records and filters `train` vs `val/test` before fitting.
+
+On NVIDIA L4/A100/H100 or newer GPUs, FlashAttention can speed up training, but install it separately only after PyTorch is installed:
+
+```bash
+python -m pip install flash-attn --no-build-isolation
+```
+
+Before starting a long VM run, check the dataset splits and training environment:
+
+```bash
+python scripts/preflight_train.py --config configs/gemma4_12b_lora_sft.yaml
+```
 
 ## Notebook for Presentation
 
@@ -74,6 +88,7 @@ Open [notebooks/Surgical_Video_Assistant_Training.ipynb](notebooks/Surgical_Vide
 - dataset preparation,
 - smoke-test inference/evaluation,
 - LoRA/QLoRA training,
+- Gemma 4 12B and Gemma 4 26B-A4B comparison-ready configs,
 - checkpoint logging,
 - loss and metric charts saved under `reports/figures`.
 
@@ -119,6 +134,16 @@ After inference/evaluation or training, generate a presentation-ready summary:
 python scripts/make_training_report.py \
   --metrics reports/metrics_mock.json \
   --out reports/training_summary.md
+```
+
+To compare your Gemma runs with prior papers in one Markdown table:
+
+```bash
+python scripts/compare_benchmarks.py \
+  --paper-baselines reports/paper_baselines.template.json \
+  --gemma12 reports/metrics_gemma4_12b_zero_shot.json \
+  --gemma26 reports/metrics_gemma4_26b_zero_shot.json \
+  --out reports/benchmark_comparison.md
 ```
 
 ## Dataset Notes

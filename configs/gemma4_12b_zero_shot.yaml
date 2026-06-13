@@ -15,4 +15,4 @@ prompt:
   use_answer_space: true
 
 output:
-  predictions_jsonl: reports/predictions_gemma4_zero_shot.jsonl
+  predictions_jsonl: reports/predictions_gemma4_12b_zero_shot.jsonl

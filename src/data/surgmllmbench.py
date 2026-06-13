@@ -53,6 +53,8 @@ def parse_record(
     answer = str(answer).strip()
     task_type = str(record.get("task_type") or infer_task_type(question, str(source_file)))
 
+    row_split = str(record.get("split") or split)
+
     return SurgicalSample(
         sample_id=sample_id,
         dataset="SurgMLLMBench",
@@ -60,7 +62,7 @@ def parse_record(
         question=question,
         answer=answer,
         task_type=task_type,
-        split=split,
+        split=row_split,
         metadata={
             "source_file": str(source_file),
             "raw_image": str(image_value),

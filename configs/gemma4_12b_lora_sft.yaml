@@ -9,13 +9,12 @@ data:
   eval_jsonl: data/processed/processed_dataset.jsonl
   train_splits: ["train"]
   eval_splits: ["val", "test"]
-  image_root:
   max_train_samples:
   max_eval_samples: 256
 
 training:
-  output_dir: checkpoints/gemma4-surgical-frame-lora
-  logging_dir: reports/training_logs
+  output_dir: checkpoints/gemma4-12b-surgical-frame-lora
+  logging_dir: reports/training_logs/gemma4-12b
   num_train_epochs: 2
   per_device_train_batch_size: 1
   per_device_eval_batch_size: 1

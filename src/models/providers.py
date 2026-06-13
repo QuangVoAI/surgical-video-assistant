@@ -45,7 +45,7 @@ class TransformersProvider:
         self.name = model_name
         self.max_new_tokens = max_new_tokens
         try:
-            from transformers import AutoProcessor, AutoModelForImageTextToText
+            from transformers import AutoProcessor
         except ImportError as exc:
             raise RuntimeError(
                 "Transformers provider requires optional dependencies: "
@@ -53,7 +53,7 @@ class TransformersProvider:
             ) from exc
 
         self.processor = AutoProcessor.from_pretrained(model_name)
-        self.model = AutoModelForImageTextToText.from_pretrained(model_name, device_map=device)
+        self.model = load_multimodal_model(model_name, device_map=device)
 
     def generate(self, sample: SurgicalSample, prompt: str) -> str:
         image = Image.open(Path(sample.image_path)).convert("RGB")
@@ -66,11 +66,14 @@ class TransformersProvider:
                 ],
             }
         ]
-        inputs = self.processor.apply_chat_template(
+        rendered_prompt = self.processor.apply_chat_template(
             messages,
             add_generation_prompt=True,
-            tokenize=True,
-            return_dict=True,
+            tokenize=False,
+        )
+        inputs = self.processor(
+            text=rendered_prompt,
+            images=[image],
             return_tensors="pt",
         )
         inputs = inputs.to(self.model.device)
@@ -91,3 +94,28 @@ def build_provider(config: dict) -> VisionLanguageProvider:
             max_new_tokens=int(config.get("max_new_tokens", 64)),
         )
     raise ValueError(f"Unknown provider: {provider}")
+
+
+def load_multimodal_model(model_name: str, **kwargs):
+    try:
+        from transformers import AutoModelForImageTextToText
+
+        return load_with_dtype_compat(AutoModelForImageTextToText, model_name, **kwargs)
+    except (ImportError, AttributeError):
+        from transformers import AutoModelForMultimodalLM
+
+        return load_with_dtype_compat(AutoModelForMultimodalLM, model_name, **kwargs)
+
+
+def load_with_dtype_compat(model_cls, model_name: str, **kwargs):
+    try:
+        return model_cls.from_pretrained(model_name, **kwargs)
+    except TypeError as exc:
+        if "dtype" not in kwargs:
+            raise
+        retry_kwargs = dict(kwargs)
+        retry_kwargs["torch_dtype"] = retry_kwargs.pop("dtype")
+        try:
+            return model_cls.from_pretrained(model_name, **retry_kwargs)
+        except TypeError:
+            raise exc
