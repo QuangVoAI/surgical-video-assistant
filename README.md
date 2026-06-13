@@ -80,7 +80,7 @@ Open [notebooks/Surgical_Video_Assistant_Training.ipynb](notebooks/Surgical_Vide
 After pushing this repo to GitHub, replace the notebook variable:
 
 ```python
-GITHUB_REPO_URL = "https://github.com/YOUR_USERNAME/surgical-video-assistant.git"
+GITHUB_REPO_URL = "https://github.com/QuangVoAI/surgical-video-assistant.git"
 ```
 
 with your real repository URL.
@@ -96,7 +96,7 @@ gh repo create surgical-video-assistant --public --source . --remote origin --pu
 Without GitHub CLI, create an empty GitHub repository named `surgical-video-assistant`, then run:
 
 ```bash
-git remote add origin https://github.com/YOUR_USERNAME/surgical-video-assistant.git
+git remote add origin https://github.com/QuangVoAI/surgical-video-assistant.git
 git branch -M main
 git push -u origin main
 ```

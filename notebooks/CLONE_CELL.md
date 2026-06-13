@@ -3,7 +3,7 @@
 Paste this as the first cell in Colab or a VM notebook after the GitHub repository exists:
 
 ```python
-GITHUB_REPO_URL = "https://github.com/YOUR_USERNAME/surgical-video-assistant.git"
+GITHUB_REPO_URL = "https://github.com/QuangVoAI/surgical-video-assistant.git"
 PROJECT_DIR = "/content/surgical-video-assistant"
 
 import os, subprocess
