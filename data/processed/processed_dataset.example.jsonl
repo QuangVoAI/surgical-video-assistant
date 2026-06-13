@@ -1,0 +1,3 @@
+{"sample_id":"example-phase","dataset":"SurgMLLMBench","image_path":"data/raw/example_frame.jpg","question":"What surgical phase is shown?","answer":"Calot Triangle Dissection","task_type":"phase","split":"test","metadata":{}}
+{"sample_id":"example-tool","dataset":"SurgMLLMBench","image_path":"data/raw/example_frame.jpg","question":"Which surgical instruments are visible?","answer":"grasper","task_type":"tool_type","split":"test","metadata":{}}
+{"sample_id":"example-count","dataset":"SurgMLLMBench","image_path":"data/raw/example_frame.jpg","question":"How many surgical instruments are visible?","answer":"1","task_type":"tool_count","split":"test","metadata":{}}

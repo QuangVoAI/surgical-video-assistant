@@ -1,0 +1,15 @@
+model:
+  provider: mock
+  name: gemma-4-mock
+
+data:
+  input_jsonl: data/processed/processed_dataset.example.jsonl
+  train_jsonl: data/processed/processed_dataset.example.jsonl
+  max_samples: 25
+
+prompt:
+  prompt_type: zero_shot
+  few_shot_k: 0
+
+output:
+  predictions_jsonl: reports/predictions_mock.jsonl

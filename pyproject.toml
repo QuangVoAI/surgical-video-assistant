@@ -1,0 +1,27 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "surgical-video-assistant"
+version = "0.1.0"
+description = "Frame-level surgical VQA, phase recognition, and tool/action benchmarking with Gemma-style multimodal prompting."
+requires-python = ">=3.10"
+dependencies = [
+  "pillow>=10.0.0",
+  "pyyaml>=6.0.0",
+  "tqdm>=4.66.0",
+]
+
+[project.optional-dependencies]
+demo = ["streamlit>=1.35.0"]
+hf = ["torch>=2.2.0", "transformers>=4.45.0", "accelerate>=0.30.0"]
+dev = ["pytest>=8.0.0"]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["src*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]

@@ -1,0 +1,5 @@
+pillow>=10.0.0
+pyyaml>=6.0.0
+tqdm>=4.66.0
+streamlit>=1.35.0
+pytest>=8.0.0

@@ -1,0 +1,1 @@
+"""Surgical Video Assistant package."""

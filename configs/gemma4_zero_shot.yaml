@@ -1,0 +1,17 @@
+model:
+  provider: transformers
+  name: google/gemma-4-12b-it
+  device: auto
+  max_new_tokens: 64
+
+data:
+  input_jsonl: data/processed/processed_dataset.jsonl
+  train_jsonl: data/processed/processed_dataset.jsonl
+  max_samples:
+
+prompt:
+  prompt_type: zero_shot
+  few_shot_k: 0
+
+output:
+  predictions_jsonl: reports/predictions_gemma4_zero_shot.jsonl
