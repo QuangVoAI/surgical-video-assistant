@@ -86,6 +86,31 @@ Before starting a long VM run, check the dataset splits and training environment
 python scripts/preflight_train.py --config configs/gemma4_12b_lora_sft.yaml
 ```
 
+For a fast presentation run, first create a balanced lightweight subset that still points to the original images:
+
+```bash
+python scripts/make_fast_subset.py \
+  --input data/processed/cholec50_qa.jsonl \
+  --out data/processed/processed_dataset_fast.jsonl \
+  --train-per-task 300 \
+  --eval-per-task 80 \
+  --require-images
+```
+
+Then choose one of the quick configs:
+
+```bash
+# Smoke test, usually the fastest way to verify the full training loop.
+python scripts/preflight_train.py --config configs/gemma4_12b_lora_tiny.yaml
+python -m src.models.train_sft --config configs/gemma4_12b_lora_tiny.yaml
+
+# Short report-ready run with checkpoints and charts.
+python scripts/preflight_train.py --config configs/gemma4_12b_lora_quick.yaml
+python -m src.models.train_sft --config configs/gemma4_12b_lora_quick.yaml
+```
+
+The quick configs are intended for limited VM credit. They train a LoRA adapter on a subset and save logs, checkpoints, and `reports/figures/training_loss.png`.
+
 ## Notebook for Presentation
 
 Open [notebooks/Surgical_Video_Assistant_Training.ipynb](notebooks/Surgical_Video_Assistant_Training.ipynb) on Colab or a GPU VM. It includes:

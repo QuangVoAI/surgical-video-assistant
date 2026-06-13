@@ -101,6 +101,7 @@ def train(config: dict) -> None:
         output_dir=config["training"]["output_dir"],
         logging_dir=config["training"].get("logging_dir", "reports/training_logs"),
         num_train_epochs=float(config["training"]["num_train_epochs"]),
+        max_steps=int(config["training"].get("max_steps", -1)),
         per_device_train_batch_size=int(config["training"]["per_device_train_batch_size"]),
         per_device_eval_batch_size=int(config["training"]["per_device_eval_batch_size"]),
         gradient_accumulation_steps=int(config["training"]["gradient_accumulation_steps"]),
