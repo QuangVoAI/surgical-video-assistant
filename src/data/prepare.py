@@ -9,12 +9,13 @@ from random import Random
 
 from src.data.cholec import parse_cholec_labels
 from src.data.io import write_jsonl
+from src.data.ssg_vqa import parse_ssg_vqa
 from src.data.surgmllmbench import parse_surgmllmbench
 
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="Normalize surgical datasets into a shared JSONL schema.")
-    parser.add_argument("--dataset", choices=["surgmllmbench", "cholec"], required=True)
+    parser.add_argument("--dataset", choices=["surgmllmbench", "ssg-vqa", "cholec"], required=True)
     parser.add_argument("--raw", type=Path, required=True, help="Raw dataset directory.")
     parser.add_argument("--out", type=Path, required=True, help="Output directory.")
     parser.add_argument("--filename", default="processed_dataset.jsonl")
@@ -25,6 +26,8 @@ def main() -> None:
 
     if args.dataset == "surgmllmbench":
         samples = list(parse_surgmllmbench(args.raw))
+    elif args.dataset == "ssg-vqa":
+        samples = list(parse_ssg_vqa(args.raw))
     else:
         samples = list(parse_cholec_labels(args.raw))
 

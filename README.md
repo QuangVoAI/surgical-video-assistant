@@ -158,6 +158,15 @@ python scripts/compare_benchmarks.py \
 
 SurgMLLMBench is the primary dataset because it already includes surgical images/frames and VQA-style annotations. The Hugging Face viewer can fail on mixed JSON schemas, so this project reads raw JSON/JSONL files directly.
 
+SSG-VQA is the preferred practical VQA dataset path when SurgMLLMBench source images are unavailable. Download the public QA pairs with:
+
+```bash
+python scripts/download_ssg_vqa.py --out data/raw/SSG-VQA
+python -m src.data.prepare --dataset ssg-vqa --raw data/raw/SSG-VQA --out data/processed
+```
+
+The public SSG-VQA repo provides QA pairs and pre-extracted visual features. Raw frames still come from CholecT45/Cholec80 access, so preflight will continue to fail for Gemma image training until the corresponding images are placed under `data/raw/SSG-VQA/images/VIDxx/000001.jpg` or another path resolvable by the parser.
+
 CholecT50/CholecT45 can be used as a secondary benchmark after CAMMA access is granted. The included parser supports simple frame-level CSV/JSONL exports and turns labels into QA-style records.
 
 This project is for research and education only. It is not clinical decision support.

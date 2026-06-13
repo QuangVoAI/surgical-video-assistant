@@ -71,7 +71,7 @@ def resolve_image_path(raw_root: Path, image_value: str, source_file: Path | Non
         indexed = find_image_by_suffix(raw_root, image_path)
         if indexed is not None:
             return str(indexed)
-    return str(candidates[0])
+    return str(raw_root / image_path)
 
 
 def find_image_by_suffix(raw_root: Path, image_path: Path) -> Path | None:
