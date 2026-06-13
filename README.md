@@ -101,6 +101,26 @@ git branch -M main
 git push -u origin main
 ```
 
+You can also create and push the repository with the included safe helper. Create a new token, keep it local, then run:
+
+```bash
+export GITHUB_TOKEN="paste-your-new-token-here"
+python scripts/publish_to_github.py --repo surgical-video-assistant
+unset GITHUB_TOKEN
+```
+
+If the leaked token was ever pasted into a chat or notebook, revoke it and create a new one before running the command above.
+
+## Presentation Report
+
+After inference/evaluation or training, generate a presentation-ready summary:
+
+```bash
+python scripts/make_training_report.py \
+  --metrics reports/metrics_mock.json \
+  --out reports/training_summary.md
+```
+
 ## Dataset Notes
 
 SurgMLLMBench is the primary dataset because it already includes surgical images/frames and VQA-style annotations. The Hugging Face viewer can fail on mixed JSON schemas, so this project reads raw JSON/JSONL files directly.
