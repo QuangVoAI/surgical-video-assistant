@@ -55,13 +55,37 @@ def resolve_image_path(raw_root: Path, image_value: str, source_file: Path | Non
     candidates = []
     if source_file is not None:
         candidates.append(source_file.parent / image_path)
+        candidates.append(source_file.parent / "images" / image_path)
+        candidates.append(source_file.parent.parent / image_path)
+        candidates.append(source_file.parent.parent / "images" / image_path)
     candidates.append(raw_root / image_path)
     candidates.append(raw_root / "images" / image_path)
+    candidates.append(raw_root / "SurgMLLMBench" / image_path)
+    candidates.append(raw_root / "SurgMLLMBench" / "images" / image_path)
 
     for candidate in candidates:
         if candidate.exists():
             return str(candidate)
+
+    if source_file is not None:
+        indexed = find_image_by_suffix(raw_root, image_path)
+        if indexed is not None:
+            return str(indexed)
     return str(candidates[0])
+
+
+def find_image_by_suffix(raw_root: Path, image_path: Path) -> Path | None:
+    suffix_parts = image_path.parts[-3:] if len(image_path.parts) >= 3 else image_path.parts
+    suffix = Path(*suffix_parts)
+    matches = list(raw_root.rglob(image_path.name))
+    for match in matches[:1000]:
+        try:
+            match.relative_to(raw_root)
+        except ValueError:
+            continue
+        if str(match).endswith(str(suffix)):
+            return match
+    return matches[0] if matches else None
 
 
 def infer_task_type(question: str, source_path: str = "") -> str:
