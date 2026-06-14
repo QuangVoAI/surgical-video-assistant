@@ -1,0 +1,84 @@
+{
+  "num_samples": 300,
+  "overall": {
+    "exact_match": 0.09333333333333334,
+    "token_f1": 0.13733333333333334
+  },
+  "by_task": {
+    "phase": {
+      "accuracy": 0.09333333333333334,
+      "macro_f1": 0.022653721682847898,
+      "per_label": {
+        "calot triangle dissection": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "carlot triangle dissection": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "cleaning and coagulation": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "clipping and cutting": {
+          "precision": 0.1,
+          "recall": 0.9655172413793104,
+          "f1": 0.18122977346278318
+        },
+        "gallbladder dissection": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "gallbladder extraction": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "gallbladder packaging": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "preparation": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        }
+      },
+      "confusion": {
+        "preparation": {
+          "clipping and cutting": 160,
+          "calot triangle dissection": 8
+        },
+        "carlot triangle dissection": {
+          "clipping and cutting": 768,
+          "calot triangle dissection": 72,
+          "cleaning and coagulation": 8
+        },
+        "clipping and cutting": {
+          "clipping and cutting": 224,
+          "calot triangle dissection": 8
+        },
+        "gallbladder dissection": {
+          "calot triangle dissection": 64,
+          "clipping and cutting": 744
+        },
+        "cleaning and coagulation": {
+          "clipping and cutting": 96
+        },
+        "gallbladder packaging": {
+          "clipping and cutting": 112
+        },
+        "gallbladder extraction": {
+          "clipping and cutting": 136
+        }
+      },
+      "num_samples": 300
+    }
+  }
+}
