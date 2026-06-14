@@ -153,6 +153,31 @@ This variant fixes three common failure modes at once:
 - balance the train subset by phase label,
 - use canonical CholecT50 phase names consistently in both prompts and answers.
 
+If you want to push top-1 phase accuracy harder and still stay in a practical VM budget, run the stronger variant:
+
+```bash
+python scripts/make_fast_subset.py \
+  --input data/processed/cholec50_qa.jsonl \
+  --out data/processed/processed_dataset_phase_balanced_strong.jsonl \
+  --train-videos VID05 VID08 VID10 VID12 VID15 VID18 \
+  --eval-videos VID01 VID04 VID13 \
+  --task-types phase \
+  --balance-by-answer-tasks phase \
+  --train-per-task 980 \
+  --eval-per-task 500 \
+  --require-images
+
+python scripts/preflight_train.py --config configs/gemma4_12b_lora_phase_balanced_strong.yaml
+python -m src.models.train_sft --config configs/gemma4_12b_lora_phase_balanced_strong.yaml
+```
+
+Why this stronger config should help:
+
+- more phase-only training samples,
+- lower learning rate to reduce label-collapse bias,
+- longer training to let the ranking stabilize,
+- slightly larger LoRA capacity for phase discrimination.
+
 ## Notebook for Presentation
 
 Open [notebooks/Surgical_Video_Assistant_Training.ipynb](notebooks/Surgical_Video_Assistant_Training.ipynb) on Colab or a GPU VM. It includes:
