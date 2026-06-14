@@ -11,6 +11,7 @@ def normalize_text(text: str) -> str:
     text = str(text).lower().strip()
     text = text.translate(str.maketrans({mark: " " for mark in string.punctuation}))
     text = re.sub(r"\s+", " ", text)
+    text = text.replace("carlot triangle dissection", "calot triangle dissection")
     return text.strip()
 
 
@@ -83,12 +84,16 @@ def classification_scores(rows: Iterable[dict]) -> dict:
     per_label = {}
     confusion: dict[str, Counter] = defaultdict(Counter)
 
+    for row in rows:
+        pred = normalize_text(row["prediction"])
+        gold = normalize_text(row["ground_truth"])
+        confusion[gold][pred] += 1
+
     for label in labels:
         tp = fp = fn = 0
         for row in rows:
             pred = normalize_text(row["prediction"])
             gold = normalize_text(row["ground_truth"])
-            confusion[gold][pred] += 1
             if pred == label and gold == label:
                 tp += 1
             elif pred == label:
