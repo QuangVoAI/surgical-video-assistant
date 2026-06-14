@@ -14,7 +14,7 @@ if str(PROJECT_ROOT) not in sys.path:
 from PIL import Image
 from tqdm.auto import tqdm
 
-from scripts.predict_lora import default_choices, score_answer
+from scripts.predict_lora import default_choices, resolve_adapter_checkpoint, score_answer
 from src.data.io import iter_json_records
 from src.data.schema import SurgicalSample
 from src.models.prompts import build_prompt
@@ -167,6 +167,7 @@ def load_lora_model(model_name: str, processor_name: str, checkpoint: Path):
     except ImportError as exc:
         raise RuntimeError("Install training dependencies first: python -m pip install -r requirements-train.txt") from exc
 
+    checkpoint = resolve_adapter_checkpoint(checkpoint)
     processor = AutoProcessor.from_pretrained(processor_name)
     quantization_config = BitsAndBytesConfig(
         load_in_4bit=True,
@@ -181,7 +182,7 @@ def load_lora_model(model_name: str, processor_name: str, checkpoint: Path):
         quantization_config=quantization_config,
         dtype=torch.bfloat16,
     )
-    model = PeftModel.from_pretrained(base_model, checkpoint)
+    model = PeftModel.from_pretrained(base_model, str(checkpoint))
     model.eval()
     return model, processor
 

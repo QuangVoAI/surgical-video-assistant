@@ -61,6 +61,7 @@ def predict(
     except ImportError as exc:
         raise RuntimeError("Install training dependencies first: python -m pip install -r requirements-train.txt") from exc
 
+    checkpoint = resolve_adapter_checkpoint(checkpoint)
     processor = AutoProcessor.from_pretrained(processor_name)
     quantization_config = BitsAndBytesConfig(
         load_in_4bit=True,
@@ -75,7 +76,7 @@ def predict(
         quantization_config=quantization_config,
         dtype=torch.bfloat16,
     )
-    model = PeftModel.from_pretrained(base_model, checkpoint)
+    model = PeftModel.from_pretrained(base_model, str(checkpoint))
     model.eval()
 
     image = Image.open(image_path).convert("RGB")
@@ -162,6 +163,21 @@ def default_choices(task_type: str) -> list[str]:
             "null_verb",
         ]
     return []
+
+
+def resolve_adapter_checkpoint(checkpoint: Path) -> Path:
+    checkpoint = Path(checkpoint)
+    if (checkpoint / "adapter_config.json").exists():
+        return checkpoint
+
+    matches = sorted(checkpoint.rglob("adapter_config.json")) if checkpoint.exists() else []
+    if matches:
+        return matches[0].parent
+
+    raise FileNotFoundError(
+        "Could not find adapter_config.json under "
+        f"{checkpoint}. Check that the LoRA adapter was downloaded correctly."
+    )
 
 
 def score_answer(model, processor, image: Image.Image, prompt: str, answer: str) -> float:
