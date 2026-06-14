@@ -13,7 +13,7 @@ PHASE_CHOICES = [
     "Gallbladder Dissection",
     "Gallbladder Packaging",
     "Cleaning and Coagulation",
-    "Gallbladder Retraction",
+    "Gallbladder Extraction",
 ]
 
 

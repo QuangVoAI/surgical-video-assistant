@@ -22,6 +22,13 @@ def main() -> None:
     parser.add_argument("--eval-per-task", type=int, default=80)
     parser.add_argument("--train-videos", nargs="*", default=None, help="Optional video IDs for training, e.g. VID05 VID08.")
     parser.add_argument("--eval-videos", nargs="*", default=None, help="Optional video IDs for validation/test.")
+    parser.add_argument("--task-types", nargs="*", default=None, help="Optional task types filter, e.g. phase tool_type.")
+    parser.add_argument(
+        "--balance-by-answer-tasks",
+        nargs="*",
+        default=None,
+        help="Task types that should be balanced by answer label within each split.",
+    )
     parser.add_argument("--seed", type=int, default=13)
     parser.add_argument("--require-images", action="store_true")
     args = parser.parse_args()
@@ -32,17 +39,24 @@ def main() -> None:
         samples = [sample for sample in samples if Path(sample.image_path).exists()]
     if args.train_videos or args.eval_videos:
         samples = filter_by_videos(samples, set(args.train_videos or []), set(args.eval_videos or []))
+    if args.task_types:
+        allowed_tasks = set(args.task_types)
+        samples = [sample for sample in samples if sample.task_type in allowed_tasks]
 
     buckets = defaultdict(list)
     for sample in samples:
         split_group = "train" if sample.split == "train" else "eval"
         buckets[(split_group, sample.task_type)].append(sample)
 
+    balanced_tasks = set(args.balance_by_answer_tasks or [])
     selected = []
     for (split_group, task_type), task_samples in sorted(buckets.items()):
         rng.shuffle(task_samples)
         limit = args.train_per_task if split_group == "train" else args.eval_per_task
-        selected.extend(task_samples[:limit])
+        if task_type in balanced_tasks:
+            selected.extend(select_balanced_by_answer(task_samples, limit, rng))
+        else:
+            selected.extend(task_samples[:limit])
 
     rng.shuffle(selected)
     count = write_jsonl(selected, args.out)
@@ -75,6 +89,34 @@ def filter_by_videos(samples, train_videos: set[str], eval_videos: set[str]):
             continue
         selected.append(sample)
     return selected
+
+
+def select_balanced_by_answer(task_samples, limit: int, rng: random.Random):
+    if limit <= 0:
+        return []
+
+    by_answer = defaultdict(list)
+    for sample in task_samples:
+        by_answer[str(sample.answer)].append(sample)
+    for samples_for_answer in by_answer.values():
+        rng.shuffle(samples_for_answer)
+
+    labels = sorted(by_answer)
+    base = limit // len(labels) if labels else 0
+    remainder = limit % len(labels) if labels else 0
+
+    selected = []
+    leftovers = []
+    for index, label in enumerate(labels):
+        quota = base + (1 if index < remainder else 0)
+        picked = by_answer[label][:quota]
+        selected.extend(picked)
+        leftovers.extend(by_answer[label][quota:])
+
+    if len(selected) < limit:
+        rng.shuffle(leftovers)
+        selected.extend(leftovers[: limit - len(selected)])
+    return selected[:limit]
 
 
 if __name__ == "__main__":

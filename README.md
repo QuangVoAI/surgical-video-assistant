@@ -129,6 +129,30 @@ python -m src.models.train_sft --config configs/gemma4_12b_lora_video_subset.yam
 
 This is the recommended presentation setup when full CholecT50 training is too expensive. It does not claim full leaderboard performance, but it avoids frame overlap between train and eval videos.
 
+If phase top-1 accuracy is weak, run a focused phase-only balanced experiment instead of training all tasks together:
+
+```bash
+python scripts/make_fast_subset.py \
+  --input data/processed/cholec50_qa.jsonl \
+  --out data/processed/processed_dataset_phase_balanced.jsonl \
+  --train-videos VID05 VID08 VID10 VID12 VID15 VID18 \
+  --eval-videos VID01 VID04 VID13 \
+  --task-types phase \
+  --balance-by-answer-tasks phase \
+  --train-per-task 700 \
+  --eval-per-task 500 \
+  --require-images
+
+python scripts/preflight_train.py --config configs/gemma4_12b_lora_phase_balanced.yaml
+python -m src.models.train_sft --config configs/gemma4_12b_lora_phase_balanced.yaml
+```
+
+This variant fixes three common failure modes at once:
+
+- train on `phase` only instead of mixing phase with tool/action/triplet,
+- balance the train subset by phase label,
+- use canonical CholecT50 phase names consistently in both prompts and answers.
+
 ## Notebook for Presentation
 
 Open [notebooks/Surgical_Video_Assistant_Training.ipynb](notebooks/Surgical_Video_Assistant_Training.ipynb) on Colab or a GPU VM. It includes:

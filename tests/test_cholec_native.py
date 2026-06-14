@@ -54,6 +54,6 @@ def test_parse_native_cholect50_labels(tmp_path: Path) -> None:
     assert {sample.task_type for sample in samples} == {"phase", "tool_type", "action", "triplet"}
     assert all(Path(sample.image_path).exists() for sample in samples)
     assert all(sample.split == "val" for sample in samples)
-    assert next(sample for sample in samples if sample.task_type == "phase").answer == "calot triangle dissection"
+    assert next(sample for sample in samples if sample.task_type == "phase").answer == "Calot Triangle Dissection"
     assert next(sample for sample in samples if sample.task_type == "tool_type").answer == "grasper"
     assert next(sample for sample in samples if sample.task_type == "action").answer == "dissect"

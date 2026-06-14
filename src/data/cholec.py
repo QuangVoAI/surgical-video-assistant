@@ -6,6 +6,7 @@ from pathlib import Path
 from typing import Any, Iterator
 
 from src.data.schema import SurgicalSample, resolve_image_path
+from src.models.prompts import PHASE_CHOICES
 
 
 CHOLECT50_CROSSVAL_FOLDS = {
@@ -14,6 +15,26 @@ CHOLECT50_CROSSVAL_FOLDS = {
     3: [31, 57, 36, 18, 52, 68, 10, 8, 73, 103],
     4: [42, 29, 60, 27, 65, 75, 22, 49, 12, 110],
     5: [78, 43, 62, 35, 74, 1, 56, 4, 13, 92],
+}
+
+CHOLECT50_PHASE_CANONICAL = {
+    "preparation": "Preparation",
+    "calot triangle dissection": "Calot Triangle Dissection",
+    "carlot triangle dissection": "Calot Triangle Dissection",
+    "calot-triangle-dissection": "Calot Triangle Dissection",
+    "carlot-triangle-dissection": "Calot Triangle Dissection",
+    "clipping and cutting": "Clipping and Cutting",
+    "clipping-and-cutting": "Clipping and Cutting",
+    "gallbladder dissection": "Gallbladder Dissection",
+    "gallbladder-dissection": "Gallbladder Dissection",
+    "gallbladder packaging": "Gallbladder Packaging",
+    "gallbladder-packaging": "Gallbladder Packaging",
+    "cleaning and coagulation": "Cleaning and Coagulation",
+    "cleaning-and-coagulation": "Cleaning and Coagulation",
+    "gallbladder extraction": "Gallbladder Extraction",
+    "gallbladder-extraction": "Gallbladder Extraction",
+    "gallbladder retraction": "Gallbladder Extraction",
+    "gallbladder-retraction": "Gallbladder Extraction",
 }
 
 
@@ -52,6 +73,8 @@ def parse_native_cholect50(raw_root: Path, test_fold: int = 1) -> Iterator[Surgi
             }
 
             if frame_labels["phase"]:
+                phase_metadata = dict(metadata)
+                phase_metadata["answer_space"] = PHASE_CHOICES
                 yield make_sample(
                     base_id,
                     str(image_path),
@@ -60,7 +83,7 @@ def parse_native_cholect50(raw_root: Path, test_fold: int = 1) -> Iterator[Surgi
                     "What surgical phase is shown?",
                     frame_labels["phase"],
                     label_file,
-                    metadata,
+                    phase_metadata,
                 )
             if frame_labels["instruments"]:
                 yield make_sample(
@@ -201,12 +224,21 @@ def category_name(categories: dict[str, dict[str, str]], task: str, label_id: in
     if label_id is None:
         return ""
     task_categories = categories.get(task, {})
-    return task_categories.get(str(label_id), str(label_id))
+    value = task_categories.get(str(label_id), str(label_id))
+    if task == "phase":
+        return canonicalize_phase_label(value)
+    return value
 
 
 def append_unique(values: list[str], value: str) -> None:
     if value and value not in values:
         values.append(value)
+
+
+def canonicalize_phase_label(value: str) -> str:
+    normalized = str(value).strip().lower().replace("_", " ").replace("/", " ")
+    normalized = " ".join(normalized.split())
+    return CHOLECT50_PHASE_CANONICAL.get(normalized, str(value).strip())
 
 
 def iter_label_rows(path: Path) -> Iterator[dict]:
