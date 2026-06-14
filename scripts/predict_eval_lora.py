@@ -140,17 +140,14 @@ def build_candidate_map(
     task_types = sorted({sample.task_type for sample in selected_samples})
     candidate_map: dict[str, list[str]] = {}
     for task_type in task_types:
-        default = default_choices(task_type)
-        if default:
-            candidate_map[task_type] = default
-            continue
-
         counts = Counter(
             sample.answer.strip()
             for sample in all_samples
             if sample.task_type == task_type and sample.answer.strip()
         )
         candidates = [answer for answer, _ in counts.most_common()]
+        if not candidates:
+            candidates = default_choices(task_type)
         if max_candidates > 0:
             candidates = candidates[:max_candidates]
         if not candidates:

@@ -9,9 +9,9 @@ from typing import Iterable
 
 def normalize_text(text: str) -> str:
     text = str(text).lower().strip()
-    text = text.translate(str.maketrans("", "", string.punctuation))
+    text = text.translate(str.maketrans({mark: " " for mark in string.punctuation}))
     text = re.sub(r"\s+", " ", text)
-    return text
+    return text.strip()
 
 
 def exact_match(prediction: str, ground_truth: str) -> float:
