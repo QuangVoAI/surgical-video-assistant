@@ -197,6 +197,36 @@ python scripts/compare_benchmarks.py \
   --out reports/benchmark_comparison.md
 ```
 
+## Benchmark After Training
+
+After a LoRA checkpoint is available, run constrained prediction on the eval split and then compute benchmark-style metrics. Start with `phase` because it is fast, has a small fixed label space, and reports accuracy, macro-F1, and a confusion matrix.
+
+```bash
+python scripts/predict_eval_lora.py \
+  --checkpoint checkpoints/gemma4-12b-surgical-frame-lora-video-subset/checkpoint-500 \
+  --data data/processed/processed_dataset_video_subset.jsonl \
+  --out reports/final/predictions_gemma4_12b_lora_phase.jsonl \
+  --task-types phase \
+  --limit-per-task 100 \
+  --skip-missing-images
+
+python -m src.eval.evaluate \
+  --pred reports/final/predictions_gemma4_12b_lora_phase.jsonl \
+  --out reports/final/metrics_gemma4_12b_lora_phase.json
+```
+
+For a larger benchmark, remove `--limit-per-task 100`. Tool/action/triplet can also be evaluated, but they are slower because constrained scoring needs to compare more candidate answers:
+
+```bash
+python scripts/predict_eval_lora.py \
+  --checkpoint checkpoints/gemma4-12b-surgical-frame-lora-video-subset/checkpoint-500 \
+  --data data/processed/processed_dataset_video_subset.jsonl \
+  --out reports/final/predictions_gemma4_12b_lora_all.jsonl \
+  --task-types phase tool_type action triplet \
+  --limit-per-task 50 \
+  --skip-missing-images
+```
+
 ## Dataset Notes
 
 SurgMLLMBench is the primary dataset because it already includes surgical images/frames and VQA-style annotations. The Hugging Face viewer can fail on mixed JSON schemas, so this project reads raw JSON/JSONL files directly.
