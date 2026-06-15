@@ -576,20 +576,9 @@ def render_score_rows(rows: list[dict[str, str]]) -> str:
     )
 
 
-@app.function(image=image, timeout=900, scaledown_window=120, max_containers=1)
-@modal.concurrent(max_inputs=20)
-@modal.asgi_app()
-def ui():
+def create_simple_web_app():
     from fastapi import FastAPI
-    from gradio.routes import mount_gradio_app
-
-    return mount_gradio_app(app=FastAPI(), blocks=build_ui(), path="/")
-
-
-@app.function(image=image, timeout=1200, scaledown_window=600, max_containers=1)
-@modal.asgi_app()
-def simple_ui():
-    from fastapi import FastAPI, File, Form, UploadFile
+    from fastapi import File, Form, UploadFile
     from fastapi.responses import HTMLResponse
 
     web = FastAPI()
@@ -629,3 +618,15 @@ def simple_ui():
         )
 
     return web
+
+
+@app.function(image=image, timeout=1200, scaledown_window=600, max_containers=1)
+@modal.asgi_app()
+def ui():
+    return create_simple_web_app()
+
+
+@app.function(image=image, timeout=1200, scaledown_window=600, max_containers=1)
+@modal.asgi_app()
+def simple_ui():
+    return create_simple_web_app()
