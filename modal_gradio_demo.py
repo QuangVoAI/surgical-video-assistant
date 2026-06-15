@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import base64
+import html
 import json
 from pathlib import Path
 
@@ -306,6 +308,182 @@ def build_ui():
     return demo
 
 
+def render_simple_page(
+    answer: str = "",
+    rows: list[dict[str, str]] | None = None,
+    image_data_url: str = "",
+    error: str = "",
+) -> str:
+    rows = rows or []
+    score_rows = "\n".join(
+        "<tr>"
+        f"<td>{html.escape(row.get('rank', ''))}</td>"
+        f"<td>{html.escape(row.get('answer', ''))}</td>"
+        f"<td>{html.escape(row.get('loss', ''))}</td>"
+        "</tr>"
+        for row in rows
+    )
+    image_html = (
+        f'<img src="{image_data_url}" alt="Uploaded surgical frame" />'
+        if image_data_url
+        else '<div class="placeholder">Upload a surgical frame to preview it here.</div>'
+    )
+    answer_html = html.escape(answer or "No prediction yet.")
+    error_html = f'<div class="error">{html.escape(error)}</div>' if error else ""
+    return f"""
+    <!doctype html>
+    <html>
+      <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Surgical Gemma LoRA Demo</title>
+        <style>
+          body {{
+            margin: 0;
+            background: #f7f8fa;
+            color: #172033;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+          }}
+          main {{
+            max-width: 1180px;
+            margin: 0 auto;
+            padding: 36px 20px 56px;
+          }}
+          h1 {{ margin: 0 0 8px; font-size: 34px; }}
+          p {{ color: #4b5563; }}
+          .grid {{
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            align-items: start;
+          }}
+          .panel {{
+            background: white;
+            border: 1px solid #d9dee7;
+            border-radius: 8px;
+            padding: 18px;
+          }}
+          label {{
+            display: block;
+            font-weight: 700;
+            margin: 14px 0 6px;
+          }}
+          input, select, textarea, button {{
+            width: 100%;
+            box-sizing: border-box;
+            border: 1px solid #cfd6e3;
+            border-radius: 7px;
+            padding: 11px 12px;
+            font-size: 16px;
+          }}
+          textarea {{ min-height: 92px; resize: vertical; }}
+          button {{
+            margin-top: 18px;
+            border: 0;
+            background: #ef7a2e;
+            color: white;
+            font-weight: 800;
+            cursor: pointer;
+          }}
+          img {{
+            display: block;
+            width: 100%;
+            max-height: 460px;
+            object-fit: contain;
+            background: #050505;
+            border-radius: 6px;
+          }}
+          .placeholder {{
+            min-height: 320px;
+            display: grid;
+            place-items: center;
+            color: #6b7280;
+            background: #eef1f5;
+            border-radius: 6px;
+            text-align: center;
+            padding: 20px;
+          }}
+          .answer {{
+            min-height: 80px;
+            white-space: pre-wrap;
+            background: #f9fafb;
+            border: 1px solid #d9dee7;
+            border-radius: 7px;
+            padding: 14px;
+            font-size: 18px;
+            font-weight: 700;
+          }}
+          table {{
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 14px;
+          }}
+          th, td {{
+            border-bottom: 1px solid #e5e7eb;
+            padding: 10px 8px;
+            text-align: left;
+          }}
+          .error {{
+            border-left: 5px solid #c2410c;
+            background: #fff7ed;
+            padding: 12px 14px;
+            border-radius: 7px;
+            margin: 16px 0;
+            color: #7c2d12;
+            white-space: pre-wrap;
+          }}
+          @media (max-width: 860px) {{
+            .grid {{ grid-template-columns: 1fr; }}
+          }}
+        </style>
+      </head>
+      <body>
+        <main>
+          <h1>Surgical Frame QA Demo</h1>
+          <p>Gemma 4 12B + LoRA on Modal GPU. Use constrained labels for phase benchmark demos.</p>
+          {error_html}
+          <div class="grid">
+            <section class="panel">
+              <form action="/predict" method="post" enctype="multipart/form-data">
+                <label>Surgical frame</label>
+                <input name="file" type="file" accept="image/png,image/jpeg,image/webp" required />
+                <label>Task</label>
+                <select name="task_type">
+                  <option value="phase" selected>phase</option>
+                  <option value="tool_type">tool_type</option>
+                  <option value="action">action</option>
+                  <option value="triplet">triplet</option>
+                  <option value="vqa">vqa</option>
+                </select>
+                <label>Question</label>
+                <textarea name="question">What surgical phase is shown?</textarea>
+                <label>Prediction mode</label>
+                <select name="mode">
+                  <option value="Constrained labels" selected>Constrained labels</option>
+                  <option value="Free-form generation">Free-form generation</option>
+                </select>
+                <button type="submit">Predict</button>
+              </form>
+            </section>
+            <section class="panel">
+              {image_html}
+              <h2>Model answer</h2>
+              <div class="answer">{answer_html}</div>
+              <h2>Candidate scores</h2>
+              <table>
+                <thead><tr><th>rank</th><th>answer</th><th>loss</th></tr></thead>
+                <tbody>{score_rows}</tbody>
+              </table>
+            </section>
+          </div>
+          <p><strong>Demo note:</strong> For phase recognition, constrained labels are the benchmark-style mode.
+          Free-form generation is only for assistant-style qualitative examples.</p>
+        </main>
+      </body>
+    </html>
+    """
+
+
 @app.function(image=image, timeout=900, scaledown_window=120, max_containers=1)
 @modal.concurrent(max_inputs=20)
 @modal.asgi_app()
@@ -314,3 +492,37 @@ def ui():
     from gradio.routes import mount_gradio_app
 
     return mount_gradio_app(app=FastAPI(), blocks=build_ui(), path="/")
+
+
+@app.function(image=image, timeout=1200, scaledown_window=600, max_containers=1)
+@modal.asgi_app()
+def simple_ui():
+    from fastapi import FastAPI, File, Form, UploadFile
+    from fastapi.responses import HTMLResponse
+
+    web = FastAPI()
+
+    @web.get("/", response_class=HTMLResponse)
+    async def index():
+        return render_simple_page()
+
+    @web.post("/predict", response_class=HTMLResponse)
+    async def predict(
+        file: UploadFile = File(...),
+        task_type: str = Form("phase"),
+        question: str = Form("What surgical phase is shown?"),
+        mode: str = Form("Constrained labels"),
+    ):
+        image_bytes = await file.read()
+        image_type = file.content_type or "image/png"
+        image_data_url = f"data:{image_type};base64,{base64.b64encode(image_bytes).decode('ascii')}"
+        try:
+            answer, rows = SurgicalGemma().predict.remote(image_bytes, task_type, question, mode)
+        except Exception as exc:
+            return render_simple_page(
+                image_data_url=image_data_url,
+                error=f"{type(exc).__name__}: {exc}",
+            )
+        return render_simple_page(answer=answer, rows=rows, image_data_url=image_data_url)
+
+    return web
