@@ -50,11 +50,12 @@ image = (
         "protobuf>=4.25.0",
         "sentencepiece>=0.2.0",
         "torch>=2.3.0",
+        "torchvision>=0.18.0",
         "transformers>=5.10.1",
     )
     .env(
         {
-            "HF_HUB_ENABLE_HF_TRANSFER": "1",
+            "HF_XET_HIGH_PERFORMANCE": "1",
             "PYTHONPATH": str(APP_DIR),
         }
     )
