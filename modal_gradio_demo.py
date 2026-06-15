@@ -515,7 +515,7 @@ def simple_ui():
         image_type = file.content_type or "image/png"
         image_data_url = f"data:{image_type};base64,{base64.b64encode(image_bytes).decode('ascii')}"
         try:
-            answer, rows = SurgicalGemma().predict.remote(image_bytes, task_type, question, mode)
+            answer, rows = await SurgicalGemma().predict.remote.aio(image_bytes, task_type, question, mode)
         except Exception as exc:
             return render_simple_page(
                 image_data_url=image_data_url,
