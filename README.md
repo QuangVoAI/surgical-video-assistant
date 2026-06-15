@@ -58,6 +58,15 @@ Start the demo:
 streamlit run src/demo/app.py
 ```
 
+Start the presentation results demo:
+
+```bash
+streamlit run src/demo/results_app.py
+```
+
+This offline demo uses saved zero-shot, LoRA, and calibration metrics under `reports/`.
+It does not load Gemma or require a GPU, so it is the recommended demo for a live report.
+
 ## Optional VM Training
 
 If you rent a GPU VM, install the training dependencies:

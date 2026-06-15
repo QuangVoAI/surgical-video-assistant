@@ -1,0 +1,986 @@
+[
+  {
+    "sample_id": "cholect50-VID01-001498-phase",
+    "video_id": "VID01",
+    "frame_id": 1498,
+    "image_path": "data/raw/CholecT50/CholecT50/videos/VID01/001498.png",
+    "question": "What surgical phase is shown?",
+    "ground_truth": "Gallbladder Packaging",
+    "zeroshot_prediction": "Calot Triangle Dissection",
+    "lora_prediction": "Gallbladder Extraction",
+    "calibrated_prediction": "Gallbladder Packaging",
+    "zeroshot_top_scores": [
+      {
+        "answer": "Calot Triangle Dissection",
+        "loss": 1.3163727521896362
+      },
+      {
+        "answer": "Cleaning and Coagulation",
+        "loss": 1.5451096296310425
+      },
+      {
+        "answer": "Gallbladder Dissection",
+        "loss": 1.6838960647583008
+      },
+      {
+        "answer": "Clipping and Cutting",
+        "loss": 1.8334341049194336
+      },
+      {
+        "answer": "Gallbladder Extraction",
+        "loss": 1.9531219005584717
+      }
+    ],
+    "lora_top_scores": [
+      {
+        "answer": "Gallbladder Extraction",
+        "loss": 0.2795151472091675
+      },
+      {
+        "answer": "Gallbladder Dissection",
+        "loss": 0.41745296120643616
+      },
+      {
+        "answer": "Gallbladder Packaging",
+        "loss": 0.4744509160518646
+      },
+      {
+        "answer": "Calot Triangle Dissection",
+        "loss": 0.546100914478302
+      },
+      {
+        "answer": "Cleaning and Coagulation",
+        "loss": 0.5569215416908264
+      }
+    ],
+    "lora_calibrated_top_scores": [
+      {
+        "answer": "Gallbladder Packaging",
+        "loss": 0.4744509160518646,
+        "calibrated_loss": 0.4744509160518646
+      },
+      {
+        "answer": "Calot Triangle Dissection",
+        "loss": 0.546100914478302,
+        "calibrated_loss": 0.646100914478302
+      },
+      {
+        "answer": "Gallbladder Extraction",
+        "loss": 0.2795151472091675,
+        "calibrated_loss": 3.2795151472091675
+      },
+      {
+        "answer": "Gallbladder Dissection",
+        "loss": 0.41745296120643616,
+        "calibrated_loss": 3.417452961206436
+      },
+      {
+        "answer": "Cleaning and Coagulation",
+        "loss": 0.5569215416908264,
+        "calibrated_loss": 3.5569215416908264
+      }
+    ]
+  },
+  {
+    "sample_id": "cholect50-VID01-001499-phase",
+    "video_id": "VID01",
+    "frame_id": 1499,
+    "image_path": "data/raw/CholecT50/CholecT50/videos/VID01/001499.png",
+    "question": "What surgical phase is shown?",
+    "ground_truth": "Gallbladder Packaging",
+    "zeroshot_prediction": "Calot Triangle Dissection",
+    "lora_prediction": "Gallbladder Extraction",
+    "calibrated_prediction": "Gallbladder Packaging",
+    "zeroshot_top_scores": [
+      {
+        "answer": "Calot Triangle Dissection",
+        "loss": 1.3845645189285278
+      },
+      {
+        "answer": "Cleaning and Coagulation",
+        "loss": 1.5187731981277466
+      },
+      {
+        "answer": "Gallbladder Dissection",
+        "loss": 1.7328928709030151
+      },
+      {
+        "answer": "Clipping and Cutting",
+        "loss": 1.911697506904602
+      },
+      {
+        "answer": "Gallbladder Extraction",
+        "loss": 1.9952911138534546
+      }
+    ],
+    "lora_top_scores": [
+      {
+        "answer": "Gallbladder Extraction",
+        "loss": 0.21816861629486084
+      },
+      {
+        "answer": "Gallbladder Packaging",
+        "loss": 0.44171079993247986
+      },
+      {
+        "answer": "Gallbladder Dissection",
+        "loss": 0.4710491895675659
+      },
+      {
+        "answer": "Calot Triangle Dissection",
+        "loss": 0.5042728185653687
+      },
+      {
+        "answer": "Cleaning and Coagulation",
+        "loss": 0.5744065642356873
+      }
+    ],
+    "lora_calibrated_top_scores": [
+      {
+        "answer": "Gallbladder Packaging",
+        "loss": 0.44171079993247986,
+        "calibrated_loss": 0.44171079993247986
+      },
+      {
+        "answer": "Calot Triangle Dissection",
+        "loss": 0.5042728185653687,
+        "calibrated_loss": 0.6042728185653686
+      },
+      {
+        "answer": "Gallbladder Extraction",
+        "loss": 0.21816861629486084,
+        "calibrated_loss": 3.218168616294861
+      },
+      {
+        "answer": "Gallbladder Dissection",
+        "loss": 0.4710491895675659,
+        "calibrated_loss": 3.471049189567566
+      },
+      {
+        "answer": "Cleaning and Coagulation",
+        "loss": 0.5744065642356873,
+        "calibrated_loss": 3.5744065642356873
+      }
+    ]
+  },
+  {
+    "sample_id": "cholect50-VID01-000028-phase",
+    "video_id": "VID01",
+    "frame_id": 28,
+    "image_path": "data/raw/CholecT50/CholecT50/videos/VID01/000028.png",
+    "question": "What surgical phase is shown?",
+    "ground_truth": "Calot Triangle Dissection",
+    "zeroshot_prediction": "Calot Triangle Dissection",
+    "lora_prediction": "Gallbladder Dissection",
+    "calibrated_prediction": "Calot Triangle Dissection",
+    "zeroshot_top_scores": [
+      {
+        "answer": "Calot Triangle Dissection",
+        "loss": 1.2257174253463745
+      },
+      {
+        "answer": "Cleaning and Coagulation",
+        "loss": 1.5288225412368774
+      },
+      {
+        "answer": "Gallbladder Dissection",
+        "loss": 1.6364730596542358
+      },
+      {
+        "answer": "Clipping and Cutting",
+        "loss": 1.813584327697754
+      },
+      {
+        "answer": "Gallbladder Extraction",
+        "loss": 2.0947957038879395
+      }
+    ],
+    "lora_top_scores": [
+      {
+        "answer": "Gallbladder Dissection",
+        "loss": 0.2809806764125824
+      },
+      {
+        "answer": "Calot Triangle Dissection",
+        "loss": 0.3044849932193756
+      },
+      {
+        "answer": "Gallbladder Extraction",
+        "loss": 0.3429728150367737
+      },
+      {
+        "answer": "Clipping and Cutting",
+        "loss": 0.5750139355659485
+      },
+      {
+        "answer": "Cleaning and Coagulation",
+        "loss": 0.5813972353935242
+      }
+    ],
+    "lora_calibrated_top_scores": [
+      {
+        "answer": "Calot Triangle Dissection",
+        "loss": 0.3044849932193756,
+        "calibrated_loss": 0.4044849932193756
+      },
+      {
+        "answer": "Gallbladder Dissection",
+        "loss": 0.2809806764125824,
+        "calibrated_loss": 3.2809806764125824
+      },
+      {
+        "answer": "Gallbladder Extraction",
+        "loss": 0.3429728150367737,
+        "calibrated_loss": 3.3429728150367737
+      },
+      {
+        "answer": "Clipping and Cutting",
+        "loss": 0.5750139355659485,
+        "calibrated_loss": 3.5750139355659485
+      },
+      {
+        "answer": "Cleaning and Coagulation",
+        "loss": 0.5813972353935242,
+        "calibrated_loss": 3.581397235393524
+      }
+    ]
+  },
+  {
+    "sample_id": "cholect50-VID01-000030-phase",
+    "video_id": "VID01",
+    "frame_id": 30,
+    "image_path": "data/raw/CholecT50/CholecT50/videos/VID01/000030.png",
+    "question": "What surgical phase is shown?",
+    "ground_truth": "Calot Triangle Dissection",
+    "zeroshot_prediction": "Calot Triangle Dissection",
+    "lora_prediction": "Gallbladder Dissection",
+    "calibrated_prediction": "Calot Triangle Dissection",
+    "zeroshot_top_scores": [
+      {
+        "answer": "Calot Triangle Dissection",
+        "loss": 1.2443997859954834
+      },
+      {
+        "answer": "Gallbladder Dissection",
+        "loss": 1.559072494506836
+      },
+      {
+        "answer": "Cleaning and Coagulation",
+        "loss": 1.5965855121612549
+      },
+      {
+        "answer": "Clipping and Cutting",
+        "loss": 1.6945534944534302
+      },
+      {
+        "answer": "Gallbladder Extraction",
+        "loss": 2.066937208175659
+      }
+    ],
+    "lora_top_scores": [
+      {
+        "answer": "Gallbladder Dissection",
+        "loss": 0.2581695020198822
+      },
+      {
+        "answer": "Calot Triangle Dissection",
+        "loss": 0.30709412693977356
+      },
+      {
+        "answer": "Gallbladder Extraction",
+        "loss": 0.3740619122982025
+      },
+      {
+        "answer": "Clipping and Cutting",
+        "loss": 0.5511656403541565
+      },
+      {
+        "answer": "Gallbladder Packaging",
+        "loss": 0.5848228335380554
+      }
+    ],
+    "lora_calibrated_top_scores": [
+      {
+        "answer": "Calot Triangle Dissection",
+        "loss": 0.30709412693977356,
+        "calibrated_loss": 0.40709412693977354
+      },
+      {
+        "answer": "Gallbladder Packaging",
+        "loss": 0.5848228335380554,
+        "calibrated_loss": 0.5848228335380554
+      },
+      {
+        "answer": "Gallbladder Dissection",
+        "loss": 0.2581695020198822,
+        "calibrated_loss": 3.258169502019882
+      },
+      {
+        "answer": "Gallbladder Extraction",
+        "loss": 0.3740619122982025,
+        "calibrated_loss": 3.3740619122982025
+      },
+      {
+        "answer": "Clipping and Cutting",
+        "loss": 0.5511656403541565,
+        "calibrated_loss": 3.5511656403541565
+      }
+    ]
+  },
+  {
+    "sample_id": "cholect50-VID01-000890-phase",
+    "video_id": "VID01",
+    "frame_id": 890,
+    "image_path": "data/raw/CholecT50/CholecT50/videos/VID01/000890.png",
+    "question": "What surgical phase is shown?",
+    "ground_truth": "Gallbladder Dissection",
+    "zeroshot_prediction": "Calot Triangle Dissection",
+    "lora_prediction": "Gallbladder Dissection",
+    "calibrated_prediction": "Calot Triangle Dissection",
+    "zeroshot_top_scores": [
+      {
+        "answer": "Calot Triangle Dissection",
+        "loss": 1.3219650983810425
+      },
+      {
+        "answer": "Cleaning and Coagulation",
+        "loss": 1.585953950881958
+      },
+      {
+        "answer": "Gallbladder Dissection",
+        "loss": 1.6479697227478027
+      },
+      {
+        "answer": "Clipping and Cutting",
+        "loss": 1.760917067527771
+      },
+      {
+        "answer": "Gallbladder Extraction",
+        "loss": 2.08813214302063
+      }
+    ],
+    "lora_top_scores": [
+      {
+        "answer": "Gallbladder Dissection",
+        "loss": 0.2872233986854553
+      },
+      {
+        "answer": "Gallbladder Extraction",
+        "loss": 0.323341429233551
+      },
+      {
+        "answer": "Calot Triangle Dissection",
+        "loss": 0.35725638270378113
+      },
+      {
+        "answer": "Clipping and Cutting",
+        "loss": 0.47929489612579346
+      },
+      {
+        "answer": "Cleaning and Coagulation",
+        "loss": 0.5586024522781372
+      }
+    ],
+    "lora_calibrated_top_scores": [
+      {
+        "answer": "Calot Triangle Dissection",
+        "loss": 0.35725638270378113,
+        "calibrated_loss": 0.4572563827037811
+      },
+      {
+        "answer": "Gallbladder Dissection",
+        "loss": 0.2872233986854553,
+        "calibrated_loss": 3.2872233986854553
+      },
+      {
+        "answer": "Gallbladder Extraction",
+        "loss": 0.323341429233551,
+        "calibrated_loss": 3.323341429233551
+      },
+      {
+        "answer": "Clipping and Cutting",
+        "loss": 0.47929489612579346,
+        "calibrated_loss": 3.4792948961257935
+      },
+      {
+        "answer": "Cleaning and Coagulation",
+        "loss": 0.5586024522781372,
+        "calibrated_loss": 3.558602452278137
+      }
+    ]
+  },
+  {
+    "sample_id": "cholect50-VID01-000896-phase",
+    "video_id": "VID01",
+    "frame_id": 896,
+    "image_path": "data/raw/CholecT50/CholecT50/videos/VID01/000896.png",
+    "question": "What surgical phase is shown?",
+    "ground_truth": "Gallbladder Dissection",
+    "zeroshot_prediction": "Calot Triangle Dissection",
+    "lora_prediction": "Gallbladder Dissection",
+    "calibrated_prediction": "Calot Triangle Dissection",
+    "zeroshot_top_scores": [
+      {
+        "answer": "Calot Triangle Dissection",
+        "loss": 1.3214027881622314
+      },
+      {
+        "answer": "Gallbladder Dissection",
+        "loss": 1.565761685371399
+      },
+      {
+        "answer": "Cleaning and Coagulation",
+        "loss": 1.6070888042449951
+      },
+      {
+        "answer": "Clipping and Cutting",
+        "loss": 1.839223861694336
+      },
+      {
+        "answer": "Gallbladder Extraction",
+        "loss": 2.044466257095337
+      }
+    ],
+    "lora_top_scores": [
+      {
+        "answer": "Gallbladder Dissection",
+        "loss": 0.29488274455070496
+      },
+      {
+        "answer": "Gallbladder Extraction",
+        "loss": 0.30898910760879517
+      },
+      {
+        "answer": "Calot Triangle Dissection",
+        "loss": 0.3419691026210785
+      },
+      {
+        "answer": "Clipping and Cutting",
+        "loss": 0.4631775915622711
+      },
+      {
+        "answer": "Cleaning and Coagulation",
+        "loss": 0.5375956296920776
+      }
+    ],
+    "lora_calibrated_top_scores": [
+      {
+        "answer": "Calot Triangle Dissection",
+        "loss": 0.3419691026210785,
+        "calibrated_loss": 0.44196910262107847
+      },
+      {
+        "answer": "Gallbladder Dissection",
+        "loss": 0.29488274455070496,
+        "calibrated_loss": 3.294882744550705
+      },
+      {
+        "answer": "Gallbladder Extraction",
+        "loss": 0.30898910760879517,
+        "calibrated_loss": 3.308989107608795
+      },
+      {
+        "answer": "Clipping and Cutting",
+        "loss": 0.4631775915622711,
+        "calibrated_loss": 3.463177591562271
+      },
+      {
+        "answer": "Cleaning and Coagulation",
+        "loss": 0.5375956296920776,
+        "calibrated_loss": 3.5375956296920776
+      }
+    ]
+  },
+  {
+    "sample_id": "cholect50-VID01-001642-phase",
+    "video_id": "VID01",
+    "frame_id": 1642,
+    "image_path": "data/raw/CholecT50/CholecT50/videos/VID01/001642.png",
+    "question": "What surgical phase is shown?",
+    "ground_truth": "Gallbladder Extraction",
+    "zeroshot_prediction": "Calot Triangle Dissection",
+    "lora_prediction": "Gallbladder Extraction",
+    "calibrated_prediction": "Gallbladder Packaging",
+    "zeroshot_top_scores": [
+      {
+        "answer": "Calot Triangle Dissection",
+        "loss": 1.4269617795944214
+      },
+      {
+        "answer": "Cleaning and Coagulation",
+        "loss": 1.5356295108795166
+      },
+      {
+        "answer": "Gallbladder Dissection",
+        "loss": 1.6879788637161255
+      },
+      {
+        "answer": "Clipping and Cutting",
+        "loss": 1.9080772399902344
+      },
+      {
+        "answer": "Gallbladder Extraction",
+        "loss": 1.9920508861541748
+      }
+    ],
+    "lora_top_scores": [
+      {
+        "answer": "Gallbladder Extraction",
+        "loss": 0.23703904449939728
+      },
+      {
+        "answer": "Gallbladder Dissection",
+        "loss": 0.3987898826599121
+      },
+      {
+        "answer": "Gallbladder Packaging",
+        "loss": 0.4579368233680725
+      },
+      {
+        "answer": "Calot Triangle Dissection",
+        "loss": 0.5229567885398865
+      },
+      {
+        "answer": "Cleaning and Coagulation",
+        "loss": 0.5789895057678223
+      }
+    ],
+    "lora_calibrated_top_scores": [
+      {
+        "answer": "Gallbladder Packaging",
+        "loss": 0.4579368233680725,
+        "calibrated_loss": 0.4579368233680725
+      },
+      {
+        "answer": "Calot Triangle Dissection",
+        "loss": 0.5229567885398865,
+        "calibrated_loss": 0.6229567885398865
+      },
+      {
+        "answer": "Gallbladder Extraction",
+        "loss": 0.23703904449939728,
+        "calibrated_loss": 3.2370390444993973
+      },
+      {
+        "answer": "Gallbladder Dissection",
+        "loss": 0.3987898826599121,
+        "calibrated_loss": 3.398789882659912
+      },
+      {
+        "answer": "Cleaning and Coagulation",
+        "loss": 0.5789895057678223,
+        "calibrated_loss": 3.5789895057678223
+      }
+    ]
+  },
+  {
+    "sample_id": "cholect50-VID01-001643-phase",
+    "video_id": "VID01",
+    "frame_id": 1643,
+    "image_path": "data/raw/CholecT50/CholecT50/videos/VID01/001643.png",
+    "question": "What surgical phase is shown?",
+    "ground_truth": "Gallbladder Extraction",
+    "zeroshot_prediction": "Calot Triangle Dissection",
+    "lora_prediction": "Gallbladder Extraction",
+    "calibrated_prediction": "Calot Triangle Dissection",
+    "zeroshot_top_scores": [
+      {
+        "answer": "Calot Triangle Dissection",
+        "loss": 1.3352926969528198
+      },
+      {
+        "answer": "Cleaning and Coagulation",
+        "loss": 1.5388144254684448
+      },
+      {
+        "answer": "Gallbladder Dissection",
+        "loss": 1.587386965751648
+      },
+      {
+        "answer": "Clipping and Cutting",
+        "loss": 1.9013179540634155
+      },
+      {
+        "answer": "Gallbladder Extraction",
+        "loss": 1.9255812168121338
+      }
+    ],
+    "lora_top_scores": [
+      {
+        "answer": "Gallbladder Extraction",
+        "loss": 0.31562498211860657
+      },
+      {
+        "answer": "Gallbladder Dissection",
+        "loss": 0.3619924783706665
+      },
+      {
+        "answer": "Calot Triangle Dissection",
+        "loss": 0.4020501971244812
+      },
+      {
+        "answer": "Gallbladder Packaging",
+        "loss": 0.5115554928779602
+      },
+      {
+        "answer": "Cleaning and Coagulation",
+        "loss": 0.5766693949699402
+      }
+    ],
+    "lora_calibrated_top_scores": [
+      {
+        "answer": "Calot Triangle Dissection",
+        "loss": 0.4020501971244812,
+        "calibrated_loss": 0.5020501971244812
+      },
+      {
+        "answer": "Gallbladder Packaging",
+        "loss": 0.5115554928779602,
+        "calibrated_loss": 0.5115554928779602
+      },
+      {
+        "answer": "Gallbladder Extraction",
+        "loss": 0.31562498211860657,
+        "calibrated_loss": 3.3156249821186066
+      },
+      {
+        "answer": "Gallbladder Dissection",
+        "loss": 0.3619924783706665,
+        "calibrated_loss": 3.3619924783706665
+      },
+      {
+        "answer": "Cleaning and Coagulation",
+        "loss": 0.5766693949699402,
+        "calibrated_loss": 3.57666939496994
+      }
+    ]
+  },
+  {
+    "sample_id": "cholect50-VID01-000721-phase",
+    "video_id": "VID01",
+    "frame_id": 721,
+    "image_path": "data/raw/CholecT50/CholecT50/videos/VID01/000721.png",
+    "question": "What surgical phase is shown?",
+    "ground_truth": "Clipping and Cutting",
+    "zeroshot_prediction": "Calot Triangle Dissection",
+    "lora_prediction": "Calot Triangle Dissection",
+    "calibrated_prediction": "Calot Triangle Dissection",
+    "zeroshot_top_scores": [
+      {
+        "answer": "Calot Triangle Dissection",
+        "loss": 1.2487447261810303
+      },
+      {
+        "answer": "Gallbladder Dissection",
+        "loss": 1.629082202911377
+      },
+      {
+        "answer": "Cleaning and Coagulation",
+        "loss": 1.6524971723556519
+      },
+      {
+        "answer": "Clipping and Cutting",
+        "loss": 1.7098842859268188
+      },
+      {
+        "answer": "Gallbladder Extraction",
+        "loss": 2.162227153778076
+      }
+    ],
+    "lora_top_scores": [
+      {
+        "answer": "Calot Triangle Dissection",
+        "loss": 0.25718560814857483
+      },
+      {
+        "answer": "Gallbladder Dissection",
+        "loss": 0.34615811705589294
+      },
+      {
+        "answer": "Clipping and Cutting",
+        "loss": 0.37903133034706116
+      },
+      {
+        "answer": "Gallbladder Extraction",
+        "loss": 0.46882352232933044
+      },
+      {
+        "answer": "Cleaning and Coagulation",
+        "loss": 0.6128759384155273
+      }
+    ],
+    "lora_calibrated_top_scores": [
+      {
+        "answer": "Calot Triangle Dissection",
+        "loss": 0.25718560814857483,
+        "calibrated_loss": 0.3571856081485748
+      },
+      {
+        "answer": "Gallbladder Dissection",
+        "loss": 0.34615811705589294,
+        "calibrated_loss": 3.346158117055893
+      },
+      {
+        "answer": "Clipping and Cutting",
+        "loss": 0.37903133034706116,
+        "calibrated_loss": 3.379031330347061
+      },
+      {
+        "answer": "Gallbladder Extraction",
+        "loss": 0.46882352232933044,
+        "calibrated_loss": 3.4688235223293304
+      },
+      {
+        "answer": "Cleaning and Coagulation",
+        "loss": 0.6128759384155273,
+        "calibrated_loss": 3.6128759384155273
+      }
+    ]
+  },
+  {
+    "sample_id": "cholect50-VID01-000727-phase",
+    "video_id": "VID01",
+    "frame_id": 727,
+    "image_path": "data/raw/CholecT50/CholecT50/videos/VID01/000727.png",
+    "question": "What surgical phase is shown?",
+    "ground_truth": "Clipping and Cutting",
+    "zeroshot_prediction": "Calot Triangle Dissection",
+    "lora_prediction": "Calot Triangle Dissection",
+    "calibrated_prediction": "Calot Triangle Dissection",
+    "zeroshot_top_scores": [
+      {
+        "answer": "Calot Triangle Dissection",
+        "loss": 1.1736218929290771
+      },
+      {
+        "answer": "Cleaning and Coagulation",
+        "loss": 1.4986215829849243
+      },
+      {
+        "answer": "Gallbladder Dissection",
+        "loss": 1.6124721765518188
+      },
+      {
+        "answer": "Clipping and Cutting",
+        "loss": 1.6972413063049316
+      },
+      {
+        "answer": "Gallbladder Extraction",
+        "loss": 2.087559461593628
+      }
+    ],
+    "lora_top_scores": [
+      {
+        "answer": "Calot Triangle Dissection",
+        "loss": 0.2007337361574173
+      },
+      {
+        "answer": "Gallbladder Dissection",
+        "loss": 0.35486188530921936
+      },
+      {
+        "answer": "Clipping and Cutting",
+        "loss": 0.4509604871273041
+      },
+      {
+        "answer": "Gallbladder Extraction",
+        "loss": 0.45953837037086487
+      },
+      {
+        "answer": "Cleaning and Coagulation",
+        "loss": 0.6241214871406555
+      }
+    ],
+    "lora_calibrated_top_scores": [
+      {
+        "answer": "Calot Triangle Dissection",
+        "loss": 0.2007337361574173,
+        "calibrated_loss": 0.3007337361574173
+      },
+      {
+        "answer": "Gallbladder Dissection",
+        "loss": 0.35486188530921936,
+        "calibrated_loss": 3.3548618853092194
+      },
+      {
+        "answer": "Clipping and Cutting",
+        "loss": 0.4509604871273041,
+        "calibrated_loss": 3.450960487127304
+      },
+      {
+        "answer": "Gallbladder Extraction",
+        "loss": 0.45953837037086487,
+        "calibrated_loss": 3.459538370370865
+      },
+      {
+        "answer": "Cleaning and Coagulation",
+        "loss": 0.6241214871406555,
+        "calibrated_loss": 3.6241214871406555
+      }
+    ]
+  },
+  {
+    "sample_id": "cholect50-VID04-000184-phase",
+    "video_id": "VID04",
+    "frame_id": 184,
+    "image_path": "data/raw/CholecT50/CholecT50/videos/VID04/000184.png",
+    "question": "What surgical phase is shown?",
+    "ground_truth": "Preparation",
+    "zeroshot_prediction": "Calot Triangle Dissection",
+    "lora_prediction": "Calot Triangle Dissection",
+    "calibrated_prediction": "Calot Triangle Dissection",
+    "zeroshot_top_scores": [
+      {
+        "answer": "Calot Triangle Dissection",
+        "loss": 1.3728744983673096
+      },
+      {
+        "answer": "Cleaning and Coagulation",
+        "loss": 1.5915576219558716
+      },
+      {
+        "answer": "Gallbladder Dissection",
+        "loss": 1.965006709098816
+      },
+      {
+        "answer": "Clipping and Cutting",
+        "loss": 2.068809986114502
+      },
+      {
+        "answer": "Gallbladder Extraction",
+        "loss": 2.380594491958618
+      }
+    ],
+    "lora_top_scores": [
+      {
+        "answer": "Calot Triangle Dissection",
+        "loss": 0.35332348942756653
+      },
+      {
+        "answer": "Cleaning and Coagulation",
+        "loss": 0.43216317892074585
+      },
+      {
+        "answer": "Preparation",
+        "loss": 0.5170089602470398
+      },
+      {
+        "answer": "Gallbladder Extraction",
+        "loss": 0.5278910994529724
+      },
+      {
+        "answer": "Gallbladder Dissection",
+        "loss": 0.5618160367012024
+      }
+    ],
+    "lora_calibrated_top_scores": [
+      {
+        "answer": "Calot Triangle Dissection",
+        "loss": 0.35332348942756653,
+        "calibrated_loss": 0.4533234894275665
+      },
+      {
+        "answer": "Cleaning and Coagulation",
+        "loss": 0.43216317892074585,
+        "calibrated_loss": 3.432163178920746
+      },
+      {
+        "answer": "Preparation",
+        "loss": 0.5170089602470398,
+        "calibrated_loss": 3.51700896024704
+      },
+      {
+        "answer": "Gallbladder Extraction",
+        "loss": 0.5278910994529724,
+        "calibrated_loss": 3.5278910994529724
+      },
+      {
+        "answer": "Gallbladder Dissection",
+        "loss": 0.5618160367012024,
+        "calibrated_loss": 3.5618160367012024
+      }
+    ]
+  },
+  {
+    "sample_id": "cholect50-VID04-001373-phase",
+    "video_id": "VID04",
+    "frame_id": 1373,
+    "image_path": "data/raw/CholecT50/CholecT50/videos/VID04/001373.png",
+    "question": "What surgical phase is shown?",
+    "ground_truth": "Cleaning and Coagulation",
+    "zeroshot_prediction": "Calot Triangle Dissection",
+    "lora_prediction": "Calot Triangle Dissection",
+    "calibrated_prediction": "Calot Triangle Dissection",
+    "zeroshot_top_scores": [
+      {
+        "answer": "Calot Triangle Dissection",
+        "loss": 1.3044100999832153
+      },
+      {
+        "answer": "Cleaning and Coagulation",
+        "loss": 1.621522068977356
+      },
+      {
+        "answer": "Gallbladder Dissection",
+        "loss": 1.8272324800491333
+      },
+      {
+        "answer": "Clipping and Cutting",
+        "loss": 1.8890172243118286
+      },
+      {
+        "answer": "Gallbladder Extraction",
+        "loss": 2.2496016025543213
+      }
+    ],
+    "lora_top_scores": [
+      {
+        "answer": "Calot Triangle Dissection",
+        "loss": 0.30780643224716187
+      },
+      {
+        "answer": "Gallbladder Dissection",
+        "loss": 0.5040718913078308
+      },
+      {
+        "answer": "Cleaning and Coagulation",
+        "loss": 0.5083105564117432
+      },
+      {
+        "answer": "Clipping and Cutting",
+        "loss": 0.5217172503471375
+      },
+      {
+        "answer": "Gallbladder Extraction",
+        "loss": 0.5407941341400146
+      }
+    ],
+    "lora_calibrated_top_scores": [
+      {
+        "answer": "Calot Triangle Dissection",
+        "loss": 0.30780643224716187,
+        "calibrated_loss": 0.40780643224716184
+      },
+      {
+        "answer": "Gallbladder Dissection",
+        "loss": 0.5040718913078308,
+        "calibrated_loss": 3.504071891307831
+      },
+      {
+        "answer": "Cleaning and Coagulation",
+        "loss": 0.5083105564117432,
+        "calibrated_loss": 3.508310556411743
+      },
+      {
+        "answer": "Clipping and Cutting",
+        "loss": 0.5217172503471375,
+        "calibrated_loss": 3.5217172503471375
+      },
+      {
+        "answer": "Gallbladder Extraction",
+        "loss": 0.5407941341400146,
+        "calibrated_loss": 3.5407941341400146
+      }
+    ]
+  }
+]
