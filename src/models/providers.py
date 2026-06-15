@@ -39,6 +39,8 @@ class TransformersProvider:
     def __init__(
         self,
         model_name: str,
+        processor_name: str | None = None,
+        adapter_name: str | None = None,
         device: str = "auto",
         max_new_tokens: int = 64,
     ) -> None:
@@ -52,8 +54,18 @@ class TransformersProvider:
                 "pip install '.[hf]' or install torch/transformers/accelerate."
             ) from exc
 
-        self.processor = AutoProcessor.from_pretrained(model_name)
+        self.processor = AutoProcessor.from_pretrained(processor_name or model_name)
         self.model = load_multimodal_model(model_name, device_map=device)
+        if adapter_name:
+            try:
+                from peft import PeftModel
+            except ImportError as exc:
+                raise RuntimeError(
+                    "LoRA adapter loading requires peft. Install requirements-train.txt "
+                    "or run: python -m pip install peft"
+                ) from exc
+            self.model = PeftModel.from_pretrained(self.model, adapter_name)
+            self.name = f"{model_name} + {adapter_name}"
 
     def generate(self, sample: SurgicalSample, prompt: str) -> str:
         image = Image.open(Path(sample.image_path)).convert("RGB")
@@ -90,6 +102,8 @@ def build_provider(config: dict) -> VisionLanguageProvider:
     if provider == "transformers":
         return TransformersProvider(
             model_name=config["name"],
+            processor_name=config.get("processor_name"),
+            adapter_name=config.get("adapter_name"),
             device=config.get("device", "auto"),
             max_new_tokens=int(config.get("max_new_tokens", 64)),
         )

@@ -1,9 +1,16 @@
 from __future__ import annotations
 
 import json
+import tempfile
+import uuid
 from pathlib import Path
 
 import streamlit as st
+import yaml
+
+from src.data.schema import SurgicalSample
+from src.models.prompts import build_prompt
+from src.models.providers import build_provider
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
@@ -19,6 +26,14 @@ PHASE_ORDER = [
     "Gallbladder Extraction",
 ]
 
+TASK_OPTIONS = {
+    "Phase recognition": ("phase", "What surgical phase is shown?"),
+    "Tool recognition": ("tool_type", "Which surgical instruments are visible?"),
+    "Action recognition": ("action", "What action is the instrument performing?"),
+    "Triplet recognition": ("triplet", "What surgical action triplets are visible?"),
+    "Free-form VQA": ("vqa", "What is visible in this surgical frame?"),
+}
+
 
 def main() -> None:
     st.set_page_config(page_title="Surgical Frame QA Demo", layout="wide")
@@ -27,6 +42,16 @@ def main() -> None:
     st.title("Surgical Frame QA Demo")
     st.caption("Gemma 4 12B zero-shot vs LoRA, with post-hoc calibration from saved candidate scores.")
 
+    results_tab, live_tab = st.tabs(["Saved Evaluation Demo", "Upload & Predict"])
+
+    with results_tab:
+        show_saved_results_demo()
+
+    with live_tab:
+        show_live_predict_demo()
+
+
+def show_saved_results_demo() -> None:
     metrics = load_metrics()
     cases = load_demo_cases()
 
@@ -48,6 +73,80 @@ def main() -> None:
 
     st.divider()
     show_calibration_note(metrics)
+
+
+def show_live_predict_demo() -> None:
+    st.subheader("Upload & Predict")
+    st.caption("Use mock config for a local UI demo, or switch to a Gemma/LoRA config on a GPU machine.")
+
+    left, right = st.columns([0.95, 1.05])
+    with left:
+        config_path = st.text_input("Inference config", value="configs/mock_zero_shot.yaml")
+        task_label = st.selectbox("Question type", list(TASK_OPTIONS), key="live_task")
+        default_question = TASK_OPTIONS[task_label][1]
+        question = st.text_area("Question", value=default_question, height=95)
+        uploaded = st.file_uploader("Upload surgical frame", type=["png", "jpg", "jpeg", "webp"])
+        run = st.button("Predict", type="primary")
+
+    with right:
+        if uploaded:
+            st.image(uploaded, caption="Uploaded frame", use_container_width=True)
+        else:
+            st.markdown(
+                """
+                <div class="image-placeholder">
+                  <div class="placeholder-title">Upload a frame to run prediction</div>
+                  <div>The default config is mock, so it works without GPU. Use a Gemma config on Modal/Vast for real inference.</div>
+                </div>
+                """,
+                unsafe_allow_html=True,
+            )
+
+    if not run:
+        return
+    if not uploaded:
+        st.error("Upload an image first.")
+        return
+
+    try:
+        provider = cached_provider(config_path)
+        image_path = save_uploaded_file(uploaded)
+        task_type, _ = TASK_OPTIONS[task_label]
+        sample = SurgicalSample(
+            sample_id=str(uuid.uuid4()),
+            dataset="demo",
+            image_path=str(image_path),
+            question=question.strip() or default_question,
+            answer="",
+            task_type=task_type,
+            split="demo",
+            metadata={"answer_space": PHASE_ORDER if task_type == "phase" else []},
+        )
+        prompt = build_prompt(sample)
+        with st.spinner(f"Running {provider.name}..."):
+            answer = provider.generate(sample, prompt)
+    except Exception as exc:
+        st.exception(exc)
+        return
+
+    st.markdown("### Output")
+    st.success(answer)
+    st.caption("For report demos, mention whether this was mock, zero-shot Gemma, or Gemma + LoRA.")
+
+
+@st.cache_resource
+def cached_provider(config_path: str):
+    config = yaml.safe_load((PROJECT_ROOT / config_path).read_text(encoding="utf-8"))
+    return build_provider(config["model"])
+
+
+def save_uploaded_file(uploaded) -> Path:
+    suffix = Path(uploaded.name).suffix or ".png"
+    tmp_dir = Path(tempfile.gettempdir()) / "surgical_frame_assistant"
+    tmp_dir.mkdir(parents=True, exist_ok=True)
+    path = tmp_dir / f"{uuid.uuid4()}{suffix}"
+    path.write_bytes(uploaded.getbuffer())
+    return path
 
 
 def load_metrics() -> dict:

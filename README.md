@@ -66,6 +66,9 @@ streamlit run src/demo/results_app.py
 
 This offline demo uses saved zero-shot, LoRA, and calibration metrics under `reports/`.
 It does not load Gemma or require a GPU, so it is the recommended demo for a live report.
+The same page also has an `Upload & Predict` tab. Use `configs/mock_zero_shot.yaml`
+for a local UI demo, or use `configs/gemma4_12b_lora_hf_demo.yaml` on a GPU machine
+to load the published LoRA adapter from Hugging Face.
 
 ## Optional VM Training
 
