@@ -126,7 +126,7 @@ class SurgicalGemma:
 
         from scripts.predict_lora import default_choices, score_answer
         from src.data.schema import SurgicalSample
-        from src.models.prompts import build_prompt, system_prompt
+        from src.models.prompts import build_prompt
 
         image = Image.open(io.BytesIO(image_bytes)).convert("RGB")
         task_type = task_type or "phase"
@@ -146,6 +146,7 @@ class SurgicalGemma:
                 metadata={"answer_space": PHASE_CHOICES if task_type == "phase" else []},
             )
             prompt = build_prompt(sample, include_system=False)
+            generation_prompt = build_prompt(sample, include_system=True)
 
         if mode == "Constrained labels" and task_type in {"phase", "tool_type", "action"}:
             choices = PHASE_CHOICES if task_type == "phase" else default_choices(task_type)
@@ -155,12 +156,11 @@ class SurgicalGemma:
             return scored[0][1], rows
 
         messages = [
-            {"role": "system", "content": system_prompt()},
             {
                 "role": "user",
                 "content": [
-                    {"type": "text", "text": prompt},
                     {"type": "image", "image": image},
+                    {"type": "text", "text": generation_prompt},
                 ],
             },
         ]
@@ -190,7 +190,20 @@ class SurgicalGemma:
         prompt_length = inputs["input_ids"].shape[-1]
         generated = output_ids[0][prompt_length:]
         answer = self.processor.decode(generated, skip_special_tokens=True).strip()
+        if is_invalid_generation(answer):
+            answer = (
+                "Free-form generation returned an invalid short response. "
+                "For phase recognition, switch to Constrained labels to get one of the 7 benchmark labels."
+            )
         return answer, []
+
+
+def is_invalid_generation(answer: str) -> bool:
+    clean = answer.strip()
+    if len(clean) < 4:
+        return True
+    alnum_count = sum(char.isalnum() for char in clean)
+    return alnum_count < 3
 
 
 def read_sample_examples() -> list[list[str]]:
