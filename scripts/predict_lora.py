@@ -220,8 +220,18 @@ def score_answer(model, processor, image: Image.Image, prompt: str, answer: str)
         return_tensors="pt",
     ).to(model.device)
     labels = inputs["input_ids"].clone()
-    prompt_length = int(prompt_inputs["attention_mask"].sum(dim=1).item())
-    labels[:, :prompt_length] = -100
+
+    # Find the shared prompt prefix inside the full prompt+answer encoding.
+    # Attention length can over-mask short candidate labels and produce NaN loss.
+    prompt_ids = prompt_inputs["input_ids"][0].tolist()
+    full_ids = inputs["input_ids"][0].tolist()
+    prefix_length = 0
+    for prompt_token, full_token in zip(prompt_ids, full_ids):
+        if prompt_token != full_token:
+            break
+        prefix_length += 1
+
+    labels[:, :prefix_length] = -100
     pad_token_id = processor.tokenizer.pad_token_id
     if pad_token_id is not None:
         labels[labels == pad_token_id] = -100

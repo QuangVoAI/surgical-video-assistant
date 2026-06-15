@@ -1,0 +1,30 @@
+{
+  "num_samples": 4239,
+  "top1_acc": 0.38405284265156875,
+  "top3_acc": 0.7105449398443029,
+  "top5_acc": 0.8785090823307384,
+  "mrr": 0.5680208719486851,
+  "mean_rank_when_present": 2.8011323425336165,
+  "missing_from_top_scores": 0,
+  "ground_truth_distribution": {
+    "preparation": 314,
+    "calot triangle dissection": 1628,
+    "clipping and cutting": 362,
+    "gallbladder dissection": 1229,
+    "gallbladder packaging": 206,
+    "cleaning and coagulation": 197,
+    "gallbladder extraction": 303
+  },
+  "prediction_distribution": {
+    "calot triangle dissection": 4239
+  },
+  "gt_rank_distribution": {
+    "1": 1628,
+    "2": 465,
+    "3": 919,
+    "4": 405,
+    "5": 307,
+    "6": 201,
+    "7": 314
+  }
+}

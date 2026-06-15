@@ -1,0 +1,74 @@
+{
+  "num_samples": 4239,
+  "overall": {
+    "exact_match": 0.38405284265156875,
+    "token_f1": 0.5000235904694503
+  },
+  "by_task": {
+    "phase": {
+      "accuracy": 0.38405284265156875,
+      "macro_f1": 0.0792812096715284,
+      "per_label": {
+        "calot triangle dissection": {
+          "precision": 0.38405284265156875,
+          "recall": 1.0,
+          "f1": 0.5549684677006987
+        },
+        "cleaning and coagulation": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "clipping and cutting": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "gallbladder dissection": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "gallbladder extraction": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "gallbladder packaging": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "preparation": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        }
+      },
+      "confusion": {
+        "preparation": {
+          "calot triangle dissection": 314
+        },
+        "calot triangle dissection": {
+          "calot triangle dissection": 1628
+        },
+        "clipping and cutting": {
+          "calot triangle dissection": 362
+        },
+        "gallbladder dissection": {
+          "calot triangle dissection": 1229
+        },
+        "gallbladder packaging": {
+          "calot triangle dissection": 206
+        },
+        "cleaning and coagulation": {
+          "calot triangle dissection": 197
+        },
+        "gallbladder extraction": {
+          "calot triangle dissection": 303
+        }
+      },
+      "num_samples": 4239
+    }
+  }
+}

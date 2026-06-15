@@ -1,0 +1,88 @@
+{
+  "num_samples": 4239,
+  "overall": {
+    "exact_match": 0.32885114413776834,
+    "token_f1": 0.48539749941023824
+  },
+  "by_task": {
+    "phase": {
+      "accuracy": 0.32885114413776834,
+      "macro_f1": 0.10650782919690482,
+      "per_label": {
+        "calot triangle dissection": {
+          "precision": 0.3783783783783784,
+          "recall": 0.7395577395577395,
+          "f1": 0.5006237006237005
+        },
+        "cleaning and coagulation": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "clipping and cutting": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "gallbladder dissection": {
+          "precision": 0.1988235294117647,
+          "recall": 0.13751017087062653,
+          "f1": 0.1625781625781626
+        },
+        "gallbladder extraction": {
+          "precision": 0.10144927536231885,
+          "recall": 0.06930693069306931,
+          "f1": 0.08235294117647059
+        },
+        "gallbladder packaging": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "preparation": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        }
+      },
+      "confusion": {
+        "preparation": {
+          "calot triangle dissection": 272,
+          "gallbladder extraction": 7,
+          "gallbladder dissection": 35
+        },
+        "calot triangle dissection": {
+          "calot triangle dissection": 1204,
+          "gallbladder dissection": 399,
+          "gallbladder extraction": 25
+        },
+        "clipping and cutting": {
+          "calot triangle dissection": 197,
+          "gallbladder extraction": 22,
+          "gallbladder dissection": 143
+        },
+        "gallbladder dissection": {
+          "calot triangle dissection": 1035,
+          "gallbladder dissection": 169,
+          "gallbladder extraction": 25
+        },
+        "gallbladder packaging": {
+          "calot triangle dissection": 74,
+          "gallbladder dissection": 30,
+          "gallbladder extraction": 102
+        },
+        "cleaning and coagulation": {
+          "calot triangle dissection": 141,
+          "gallbladder dissection": 51,
+          "gallbladder extraction": 5
+        },
+        "gallbladder extraction": {
+          "gallbladder extraction": 21,
+          "calot triangle dissection": 259,
+          "gallbladder dissection": 23
+        }
+      },
+      "num_samples": 4239
+    }
+  }
+}
