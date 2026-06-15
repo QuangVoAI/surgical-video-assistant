@@ -6,7 +6,7 @@ from pathlib import Path
 import modal
 
 
-APP_NAME = "surgical-gemma-lora-demo"
+APP_NAME = "surgical-gemma-lora-demo-v2"
 APP_DIR = Path("/root/app")
 HF_CACHE_DIR = "/root/.cache/huggingface"
 
@@ -52,6 +52,14 @@ image = (
         "torch>=2.3.0",
         "torchvision>=0.18.0",
         "transformers>=5.10.1",
+    )
+    .run_commands(
+        "python - <<'PY'\n"
+        "import torch\n"
+        "import torchvision\n"
+        "print('torch', torch.__version__)\n"
+        "print('torchvision', torchvision.__version__)\n"
+        "PY"
     )
     .env(
         {
