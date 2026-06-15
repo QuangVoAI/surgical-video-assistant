@@ -43,6 +43,7 @@ class TransformersProvider:
         adapter_name: str | None = None,
         device: str = "auto",
         max_new_tokens: int = 64,
+        trust_remote_code: bool = False,
     ) -> None:
         self.name = model_name
         self.max_new_tokens = max_new_tokens
@@ -54,8 +55,15 @@ class TransformersProvider:
                 "pip install '.[hf]' or install torch/transformers/accelerate."
             ) from exc
 
-        self.processor = AutoProcessor.from_pretrained(processor_name or model_name)
-        self.model = load_multimodal_model(model_name, device_map=device)
+        self.processor = AutoProcessor.from_pretrained(
+            processor_name or model_name,
+            trust_remote_code=trust_remote_code,
+        )
+        self.model = load_multimodal_model(
+            model_name,
+            device_map=device,
+            trust_remote_code=trust_remote_code,
+        )
         if adapter_name:
             try:
                 from peft import PeftModel
@@ -106,6 +114,7 @@ def build_provider(config: dict) -> VisionLanguageProvider:
             adapter_name=config.get("adapter_name"),
             device=config.get("device", "auto"),
             max_new_tokens=int(config.get("max_new_tokens", 64)),
+            trust_remote_code=bool(config.get("trust_remote_code", False)),
         )
     raise ValueError(f"Unknown provider: {provider}")
 

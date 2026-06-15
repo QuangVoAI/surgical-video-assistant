@@ -93,15 +93,24 @@ class SurgicalGemma:
             bnb_4bit_use_double_quant=True,
             bnb_4bit_quant_storage=torch.bfloat16,
         )
-        self.processor = AutoProcessor.from_pretrained(PROCESSOR_MODEL, token=token)
+        self.processor = AutoProcessor.from_pretrained(
+            PROCESSOR_MODEL,
+            token=token,
+            trust_remote_code=True,
+        )
         base_model = load_multimodal_model(
             BASE_MODEL,
             device_map="auto",
             quantization_config=quantization_config,
             dtype=torch.bfloat16,
             token=token,
+            trust_remote_code=True,
         )
-        self.model = PeftModel.from_pretrained(base_model, LORA_ADAPTER, token=token)
+        self.model = PeftModel.from_pretrained(
+            base_model,
+            LORA_ADAPTER,
+            token=token,
+        )
         self.model.eval()
 
     @modal.method()

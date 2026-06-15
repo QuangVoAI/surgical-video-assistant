@@ -5,3 +5,4 @@ model:
   adapter_name: SpringWang08/surgical-gemma4-12b-lora
   device: auto
   max_new_tokens: 64
+  trust_remote_code: true
