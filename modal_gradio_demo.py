@@ -1,6 +1,7 @@
 import base64
 import html
 import json
+from contextlib import nullcontext
 from pathlib import Path
 
 import modal
@@ -133,6 +134,17 @@ class SurgicalGemma:
 
     @modal.method()
     def predict(self, image_bytes: bytes, task_type: str, question: str, mode: str) -> tuple[str, list[dict[str, str]]]:
+        lora_answer, lora_rows, _base_answer, _base_rows = self.compare(image_bytes, task_type, question, mode)
+        return lora_answer, lora_rows
+
+    @modal.method()
+    def compare(
+        self,
+        image_bytes: bytes,
+        task_type: str,
+        question: str,
+        mode: str,
+    ) -> tuple[str, list[dict[str, str]], str, list[dict[str, str]]]:
         import io
         import math
         import tempfile
@@ -167,10 +179,38 @@ class SurgicalGemma:
 
         if mode == "Constrained labels" and task_type in {"phase", "tool_type", "action"}:
             choices = PHASE_CHOICES if task_type == "phase" else default_choices(task_type)
+            base_answer, base_rows = self.score_choices(
+                choices=choices,
+                image=image,
+                prompt=prompt,
+                score_answer=score_answer,
+                math=math,
+                use_adapter=False,
+            )
+            lora_answer, lora_rows = self.score_choices(
+                choices=choices,
+                image=image,
+                prompt=prompt,
+                score_answer=score_answer,
+                math=math,
+                use_adapter=True,
+            )
+            return lora_answer, lora_rows, base_answer, base_rows
+
+        base_answer = self.generate_answer(image=image, generation_prompt=generation_prompt, use_adapter=False)
+        lora_answer = self.generate_answer(image=image, generation_prompt=generation_prompt, use_adapter=True)
+        return lora_answer, [], base_answer, []
+
+    def score_choices(self, choices, image, prompt, score_answer, math, use_adapter: bool):
+        model_context = nullcontext() if use_adapter else self.model.disable_adapter()
+        with model_context:
             scored = [(score_answer(self.model, self.processor, image, prompt, answer), answer) for answer in choices]
-            scored.sort(key=lambda item: item[0] if math.isfinite(item[0]) else float("inf"))
-            rows = [{"rank": str(i), "answer": answer, "loss": f"{score:.4f}"} for i, (score, answer) in enumerate(scored[:7], 1)]
-            return scored[0][1], rows
+        scored.sort(key=lambda item: item[0] if math.isfinite(item[0]) else float("inf"))
+        rows = [{"rank": str(i), "answer": answer, "loss": f"{score:.4f}"} for i, (score, answer) in enumerate(scored[:7], 1)]
+        return scored[0][1], rows
+
+    def generate_answer(self, image, generation_prompt: str, use_adapter: bool) -> str:
+        import torch
 
         messages = [
             {
@@ -191,10 +231,8 @@ class SurgicalGemma:
             images=[image],
             return_tensors="pt",
         ).to(self.model.device)
-
-        import torch
-
-        with torch.inference_mode():
+        model_context = nullcontext() if use_adapter else self.model.disable_adapter()
+        with model_context, torch.inference_mode():
             output_ids = self.model.generate(
                 **inputs,
                 max_new_tokens=64,
@@ -212,7 +250,7 @@ class SurgicalGemma:
                 "Free-form generation returned an invalid short response. "
                 "For phase recognition, switch to Constrained labels to get one of the 7 benchmark labels."
             )
-        return answer, []
+        return answer
 
 
 def is_invalid_generation(answer: str) -> bool:
@@ -251,12 +289,18 @@ def build_ui():
 
     def run_predict(image_path: str | None, task_type: str, question: str, mode: str):
         if not image_path:
-            return "Upload or select a surgical frame first.", []
+            return "Upload or select a surgical frame first.", [], "Upload or select a surgical frame first.", []
         with open(image_path, "rb") as handle:
             image_bytes = handle.read()
-        answer, rows = SurgicalGemma().predict.remote(image_bytes, task_type, question, mode)
-        score_rows = [[row.get("rank", ""), row.get("answer", ""), row.get("loss", "")] for row in rows]
-        return answer, score_rows
+        lora_answer, lora_rows, base_answer, base_rows = SurgicalGemma().compare.remote(
+            image_bytes,
+            task_type,
+            question,
+            mode,
+        )
+        base_score_rows = [[row.get("rank", ""), row.get("answer", ""), row.get("loss", "")] for row in base_rows]
+        lora_score_rows = [[row.get("rank", ""), row.get("answer", ""), row.get("loss", "")] for row in lora_rows]
+        return base_answer, base_score_rows, lora_answer, lora_score_rows
 
     with gr.Blocks(title="Surgical Gemma LoRA Demo") as demo:
         gr.Markdown(
@@ -286,12 +330,21 @@ def build_ui():
                 )
                 run_button = gr.Button("Predict", variant="primary")
             with gr.Column(scale=1):
-                answer_output = gr.Textbox(label="Model answer", lines=3)
-                scores_output = gr.Dataframe(
-                    headers=["rank", "answer", "loss"],
-                    label="Candidate scores",
-                    interactive=False,
-                )
+                with gr.Row():
+                    with gr.Column():
+                        base_answer_output = gr.Textbox(label="Base Gemma 12B answer", lines=3)
+                        base_scores_output = gr.Dataframe(
+                            headers=["rank", "answer", "loss"],
+                            label="Base candidate scores",
+                            interactive=False,
+                        )
+                    with gr.Column():
+                        lora_answer_output = gr.Textbox(label="Gemma 12B + LoRA answer", lines=3)
+                        lora_scores_output = gr.Dataframe(
+                            headers=["rank", "answer", "loss"],
+                            label="LoRA candidate scores",
+                            interactive=False,
+                        )
                 gr.Markdown(
                     """
                     **Demo note:** If you use bundled examples, describe them as held-out evaluation examples.
@@ -303,7 +356,7 @@ def build_ui():
         run_button.click(
             run_predict,
             inputs=[image_input, task_input, question_input, mode_input],
-            outputs=[answer_output, scores_output],
+            outputs=[base_answer_output, base_scores_output, lora_answer_output, lora_scores_output],
         )
 
         examples = read_sample_examples()
@@ -318,26 +371,24 @@ def build_ui():
 
 
 def render_simple_page(
-    answer: str = "",
-    rows: list[dict[str, str]] | None = None,
+    lora_answer: str = "",
+    lora_rows: list[dict[str, str]] | None = None,
+    base_answer: str = "",
+    base_rows: list[dict[str, str]] | None = None,
     image_data_url: str = "",
     error: str = "",
 ) -> str:
-    rows = rows or []
-    score_rows = "\n".join(
-        "<tr>"
-        f"<td>{html.escape(row.get('rank', ''))}</td>"
-        f"<td>{html.escape(row.get('answer', ''))}</td>"
-        f"<td>{html.escape(row.get('loss', ''))}</td>"
-        "</tr>"
-        for row in rows
-    )
+    lora_rows = lora_rows or []
+    base_rows = base_rows or []
+    lora_score_rows = render_score_rows(lora_rows)
+    base_score_rows = render_score_rows(base_rows)
     image_html = (
         f'<img src="{image_data_url}" alt="Uploaded surgical frame" />'
         if image_data_url
         else '<div class="placeholder">Upload a surgical frame to preview it here.</div>'
     )
-    answer_html = html.escape(answer or "No prediction yet.")
+    base_answer_html = html.escape(base_answer or "No prediction yet.")
+    lora_answer_html = html.escape(lora_answer or "No prediction yet.")
     error_html = f'<div class="error">{html.escape(error)}</div>' if error else ""
     return f"""
     <!doctype html>
@@ -354,7 +405,7 @@ def render_simple_page(
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
           }}
           main {{
-            max-width: 1180px;
+            max-width: 1280px;
             margin: 0 auto;
             padding: 36px 20px 56px;
           }}
@@ -362,15 +413,24 @@ def render_simple_page(
           p {{ color: #4b5563; }}
           .grid {{
             display: grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: 0.8fr 1.2fr;
             gap: 24px;
             align-items: start;
           }}
-          .panel {{
+          .compare {{
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 18px;
+            margin-top: 18px;
+          }}
+          .panel, .model-card {{
             background: white;
             border: 1px solid #d9dee7;
             border-radius: 8px;
             padding: 18px;
+          }}
+          .model-card {{
+            padding: 14px;
           }}
           label {{
             display: block;
@@ -397,13 +457,13 @@ def render_simple_page(
           img {{
             display: block;
             width: 100%;
-            max-height: 460px;
+            max-height: 430px;
             object-fit: contain;
             background: #050505;
             border-radius: 6px;
           }}
           .placeholder {{
-            min-height: 320px;
+            min-height: 300px;
             display: grid;
             place-items: center;
             color: #6b7280;
@@ -413,7 +473,7 @@ def render_simple_page(
             padding: 20px;
           }}
           .answer {{
-            min-height: 80px;
+            min-height: 70px;
             white-space: pre-wrap;
             background: #f9fafb;
             border: 1px solid #d9dee7;
@@ -426,10 +486,11 @@ def render_simple_page(
             width: 100%;
             border-collapse: collapse;
             margin-top: 14px;
+            font-size: 14px;
           }}
           th, td {{
             border-bottom: 1px solid #e5e7eb;
-            padding: 10px 8px;
+            padding: 9px 6px;
             text-align: left;
           }}
           .error {{
@@ -441,15 +502,15 @@ def render_simple_page(
             color: #7c2d12;
             white-space: pre-wrap;
           }}
-          @media (max-width: 860px) {{
-            .grid {{ grid-template-columns: 1fr; }}
+          @media (max-width: 980px) {{
+            .grid, .compare {{ grid-template-columns: 1fr; }}
           }}
         </style>
       </head>
       <body>
         <main>
           <h1>Surgical Frame QA Demo</h1>
-          <p>Gemma 4 12B + LoRA on Modal GPU. Use constrained labels for phase benchmark demos.</p>
+          <p>Side-by-side prediction: base Gemma 4 12B vs Gemma 4 12B + LoRA.</p>
           {error_html}
           <div class="grid">
             <section class="panel">
@@ -471,18 +532,29 @@ def render_simple_page(
                   <option value="Constrained labels" selected>Constrained labels</option>
                   <option value="Free-form generation">Free-form generation</option>
                 </select>
-                <button type="submit">Predict</button>
+                <button type="submit">Compare Models</button>
               </form>
             </section>
             <section class="panel">
               {image_html}
-              <h2>Model answer</h2>
-              <div class="answer">{answer_html}</div>
-              <h2>Candidate scores</h2>
-              <table>
-                <thead><tr><th>rank</th><th>answer</th><th>loss</th></tr></thead>
-                <tbody>{score_rows}</tbody>
-              </table>
+              <div class="compare">
+                <div class="model-card">
+                  <h2>Base Gemma 12B</h2>
+                  <div class="answer">{base_answer_html}</div>
+                  <table>
+                    <thead><tr><th>rank</th><th>answer</th><th>loss</th></tr></thead>
+                    <tbody>{base_score_rows}</tbody>
+                  </table>
+                </div>
+                <div class="model-card">
+                  <h2>Gemma 12B + LoRA</h2>
+                  <div class="answer">{lora_answer_html}</div>
+                  <table>
+                    <thead><tr><th>rank</th><th>answer</th><th>loss</th></tr></thead>
+                    <tbody>{lora_score_rows}</tbody>
+                  </table>
+                </div>
+              </div>
             </section>
           </div>
           <p><strong>Demo note:</strong> For phase recognition, constrained labels are the benchmark-style mode.
@@ -491,6 +563,17 @@ def render_simple_page(
       </body>
     </html>
     """
+
+
+def render_score_rows(rows: list[dict[str, str]]) -> str:
+    return "\n".join(
+        "<tr>"
+        f"<td>{html.escape(row.get('rank', ''))}</td>"
+        f"<td>{html.escape(row.get('answer', ''))}</td>"
+        f"<td>{html.escape(row.get('loss', ''))}</td>"
+        "</tr>"
+        for row in rows
+    )
 
 
 @app.function(image=image, timeout=900, scaledown_window=120, max_containers=1)
@@ -526,12 +609,23 @@ def simple_ui():
         image_type = file.content_type or "image/png"
         image_data_url = f"data:{image_type};base64,{base64.b64encode(image_bytes).decode('ascii')}"
         try:
-            answer, rows = await SurgicalGemma().predict.remote.aio(image_bytes, task_type, question, mode)
+            lora_answer, lora_rows, base_answer, base_rows = await SurgicalGemma().compare.remote.aio(
+                image_bytes,
+                task_type,
+                question,
+                mode,
+            )
         except Exception as exc:
             return render_simple_page(
                 image_data_url=image_data_url,
                 error=f"{type(exc).__name__}: {exc}",
             )
-        return render_simple_page(answer=answer, rows=rows, image_data_url=image_data_url)
+        return render_simple_page(
+            lora_answer=lora_answer,
+            lora_rows=lora_rows,
+            base_answer=base_answer,
+            base_rows=base_rows,
+            image_data_url=image_data_url,
+        )
 
     return web
