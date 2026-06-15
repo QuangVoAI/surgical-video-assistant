@@ -45,6 +45,7 @@ image = (
         "gradio>=4.44.0",
         "hf-transfer>=0.1.8",
         "huggingface_hub>=0.24.0",
+        "numpy==2.2.6",
         "peft>=0.11.0",
         "pillow>=10.0.0",
         "protobuf>=4.25.0",
@@ -57,8 +58,16 @@ image = (
         "python - <<'PY'\n"
         "import torch\n"
         "import torchvision\n"
+        "import accelerate\n"
+        "import peft\n"
+        "import transformers\n"
+        "import numpy as np\n"
         "print('torch', torch.__version__)\n"
         "print('torchvision', torchvision.__version__)\n"
+        "print('numpy', np.__version__)\n"
+        "print('accelerate', accelerate.__version__)\n"
+        "print('transformers', transformers.__version__)\n"
+        "print('peft', peft.__version__)\n"
         "PY"
     )
     .env(
