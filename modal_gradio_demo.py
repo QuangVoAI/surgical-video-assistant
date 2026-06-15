@@ -254,7 +254,9 @@ def build_ui():
             return "Upload or select a surgical frame first.", []
         with open(image_path, "rb") as handle:
             image_bytes = handle.read()
-        return SurgicalGemma().predict.remote(image_bytes, task_type, question, mode)
+        answer, rows = SurgicalGemma().predict.remote(image_bytes, task_type, question, mode)
+        score_rows = [[row.get("rank", ""), row.get("answer", ""), row.get("loss", "")] for row in rows]
+        return answer, score_rows
 
     with gr.Blocks(title="Surgical Gemma LoRA Demo") as demo:
         gr.Markdown(
