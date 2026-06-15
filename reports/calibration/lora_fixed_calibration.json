@@ -1,0 +1,319 @@
+{
+  "method": "post_hoc_label_bias_calibration_on_saved_top_scores",
+  "source_predictions": "/Users/springwang/Downloads/reports/eval_full_phase_lora_fixed/predictions_lora12b_phase_full_fixed.jsonl",
+  "split_rule": "md5(sample_id) % 5 == 0 for calibration, remaining 80% for held-out report",
+  "note": "This reranks saved candidate losses only; it does not retrain Gemma or use GPU.",
+  "calibration_samples": 820,
+  "heldout_samples": 3419,
+  "learned_label_bias_added_to_loss": {
+    "calot triangle dissection": 0.1,
+    "cleaning and coagulation": 3.0,
+    "clipping and cutting": 3.0,
+    "gallbladder dissection": 3.0,
+    "gallbladder extraction": 3.0,
+    "gallbladder packaging": 0.0,
+    "preparation": 3.0
+  },
+  "before_on_heldout": {
+    "num_samples": 3419,
+    "top1_acc": 0.3296285463585844,
+    "top3_acc": 0.7385200350979819,
+    "top5_acc": 0.8941210880374378,
+    "mrr": 0.5546358584381398,
+    "mean_rank_when_present": 2.1537455021262675,
+    "missing_from_saved_candidates": 362,
+    "macro_f1": 0.1075693904671093,
+    "weighted_f1": 0.246523299228699,
+    "prediction_distribution": {
+      "calot triangle dissection": 2559,
+      "gallbladder dissection": 692,
+      "gallbladder extraction": 168
+    },
+    "ground_truth_distribution": {
+      "preparation": 256,
+      "calot triangle dissection": 1311,
+      "clipping and cutting": 289,
+      "gallbladder dissection": 1001,
+      "gallbladder packaging": 166,
+      "cleaning and coagulation": 167,
+      "gallbladder extraction": 229
+    },
+    "rank_distribution": {
+      "1": 1127,
+      "2": 1089,
+      "3": 309,
+      "4": 308,
+      "5": 224
+    },
+    "per_label": {
+      "calot triangle dissection": {
+        "precision": 0.3786635404454865,
+        "recall": 0.7391304347826086,
+        "f1": 0.5007751937984496,
+        "support": 1311
+      },
+      "cleaning and coagulation": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "support": 167
+      },
+      "clipping and cutting": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "support": 289
+      },
+      "gallbladder dissection": {
+        "precision": 0.203757225433526,
+        "recall": 0.14085914085914086,
+        "f1": 0.16656822209096278,
+        "support": 1001
+      },
+      "gallbladder extraction": {
+        "precision": 0.10119047619047619,
+        "recall": 0.07423580786026202,
+        "f1": 0.08564231738035265,
+        "support": 229
+      },
+      "gallbladder packaging": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "support": 166
+      },
+      "preparation": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "support": 256
+      }
+    }
+  },
+  "after_on_heldout": {
+    "num_samples": 3419,
+    "top1_acc": 0.39894706054401874,
+    "top3_acc": 0.7505118455688798,
+    "top5_acc": 0.8941210880374378,
+    "mrr": 0.5914107438822268,
+    "mean_rank_when_present": 2.061498200850507,
+    "missing_from_saved_candidates": 362,
+    "macro_f1": 0.1495035915839698,
+    "weighted_f1": 0.23866224905335368,
+    "prediction_distribution": {
+      "calot triangle dissection": 3342,
+      "gallbladder packaging": 77
+    },
+    "ground_truth_distribution": {
+      "preparation": 256,
+      "calot triangle dissection": 1311,
+      "clipping and cutting": 289,
+      "gallbladder dissection": 1001,
+      "gallbladder packaging": 166,
+      "cleaning and coagulation": 167,
+      "gallbladder extraction": 229
+    },
+    "rank_distribution": {
+      "1": 1364,
+      "2": 883,
+      "3": 319,
+      "4": 240,
+      "5": 251
+    },
+    "per_label": {
+      "calot triangle dissection": {
+        "precision": 0.3904847396768402,
+        "recall": 0.9954233409610984,
+        "f1": 0.5609284332688588,
+        "support": 1311
+      },
+      "cleaning and coagulation": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "support": 167
+      },
+      "clipping and cutting": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "support": 289
+      },
+      "gallbladder dissection": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "support": 1001
+      },
+      "gallbladder extraction": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "support": 229
+      },
+      "gallbladder packaging": {
+        "precision": 0.7662337662337663,
+        "recall": 0.35542168674698793,
+        "f1": 0.48559670781892994,
+        "support": 166
+      },
+      "preparation": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "support": 256
+      }
+    }
+  },
+  "before_on_all_samples": {
+    "num_samples": 4239,
+    "top1_acc": 0.32885114413776834,
+    "top3_acc": 0.7390894078792168,
+    "top5_acc": 0.8959660297239915,
+    "mrr": 0.5543681685932217,
+    "mean_rank_when_present": 2.160610847814639,
+    "missing_from_saved_candidates": 441,
+    "macro_f1": 0.10650782919690482,
+    "weighted_f1": 0.2452882490210939,
+    "prediction_distribution": {
+      "calot triangle dissection": 3182,
+      "gallbladder dissection": 850,
+      "gallbladder extraction": 207
+    },
+    "ground_truth_distribution": {
+      "preparation": 314,
+      "calot triangle dissection": 1628,
+      "clipping and cutting": 362,
+      "gallbladder dissection": 1229,
+      "gallbladder packaging": 206,
+      "cleaning and coagulation": 197,
+      "gallbladder extraction": 303
+    },
+    "rank_distribution": {
+      "1": 1394,
+      "2": 1344,
+      "3": 395,
+      "4": 386,
+      "5": 279
+    },
+    "per_label": {
+      "calot triangle dissection": {
+        "precision": 0.3783783783783784,
+        "recall": 0.7395577395577395,
+        "f1": 0.5006237006237005,
+        "support": 1628
+      },
+      "cleaning and coagulation": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "support": 197
+      },
+      "clipping and cutting": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "support": 362
+      },
+      "gallbladder dissection": {
+        "precision": 0.1988235294117647,
+        "recall": 0.13751017087062653,
+        "f1": 0.1625781625781626,
+        "support": 1229
+      },
+      "gallbladder extraction": {
+        "precision": 0.10144927536231885,
+        "recall": 0.06930693069306931,
+        "f1": 0.08235294117647059,
+        "support": 303
+      },
+      "gallbladder packaging": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "support": 206
+      },
+      "preparation": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "support": 314
+      }
+    }
+  },
+  "after_on_all_samples_for_analysis_only": {
+    "num_samples": 4239,
+    "top1_acc": 0.4008020759613116,
+    "top3_acc": 0.7497051191318708,
+    "top5_acc": 0.8959660297239915,
+    "mrr": 0.5921994181017536,
+    "mean_rank_when_present": 2.0695102685624014,
+    "missing_from_saved_candidates": 441,
+    "macro_f1": 0.15336314057693742,
+    "weighted_f1": 0.2407191123443958,
+    "prediction_distribution": {
+      "calot triangle dissection": 4140,
+      "gallbladder packaging": 99
+    },
+    "ground_truth_distribution": {
+      "preparation": 314,
+      "calot triangle dissection": 1628,
+      "clipping and cutting": 362,
+      "gallbladder dissection": 1229,
+      "gallbladder packaging": 206,
+      "cleaning and coagulation": 197,
+      "gallbladder extraction": 303
+    },
+    "rank_distribution": {
+      "1": 1699,
+      "2": 1076,
+      "3": 403,
+      "4": 300,
+      "5": 320
+    },
+    "per_label": {
+      "calot triangle dissection": {
+        "precision": 0.39154589371980675,
+        "recall": 0.9957002457002457,
+        "f1": 0.5620665742024965,
+        "support": 1628
+      },
+      "cleaning and coagulation": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "support": 197
+      },
+      "clipping and cutting": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "support": 362
+      },
+      "gallbladder dissection": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "support": 1229
+      },
+      "gallbladder extraction": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "support": 303
+      },
+      "gallbladder packaging": {
+        "precision": 0.7878787878787878,
+        "recall": 0.3786407766990291,
+        "f1": 0.5114754098360655,
+        "support": 206
+      },
+      "preparation": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "support": 314
+      }
+    }
+  }
+}

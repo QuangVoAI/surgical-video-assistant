@@ -1,0 +1,60 @@
+{
+  "zeroshot_fixed": {
+    "calibration_samples": 820,
+    "heldout_samples": 3419,
+    "bias": {
+      "calot triangle dissection": 1.7,
+      "cleaning and coagulation": 1.7,
+      "clipping and cutting": 1.7,
+      "gallbladder dissection": 1.5,
+      "gallbladder extraction": 1.2,
+      "gallbladder packaging": 0.8,
+      "preparation": 0.0
+    },
+    "before_heldout": {
+      "top1_acc": 0.3834454518865165,
+      "top3_acc": 0.7154138637028371,
+      "top5_acc": 0.8777420298332845,
+      "mrr": 0.568652070363097,
+      "macro_f1": 0.07919057686499546,
+      "weighted_f1": 0.21255686571806476
+    },
+    "after_heldout": {
+      "top1_acc": 0.39280491371746123,
+      "top3_acc": 0.726820707809301,
+      "top5_acc": 0.8517110266159695,
+      "mrr": 0.5842337637014443,
+      "macro_f1": 0.16516271397855103,
+      "weighted_f1": 0.24935806481687042
+    }
+  },
+  "lora_fixed": {
+    "calibration_samples": 820,
+    "heldout_samples": 3419,
+    "bias": {
+      "calot triangle dissection": 0.1,
+      "cleaning and coagulation": 3.0,
+      "clipping and cutting": 3.0,
+      "gallbladder dissection": 3.0,
+      "gallbladder extraction": 3.0,
+      "gallbladder packaging": 0.0,
+      "preparation": 3.0
+    },
+    "before_heldout": {
+      "top1_acc": 0.3296285463585844,
+      "top3_acc": 0.7385200350979819,
+      "top5_acc": 0.8941210880374378,
+      "mrr": 0.5546358584381398,
+      "macro_f1": 0.1075693904671093,
+      "weighted_f1": 0.246523299228699
+    },
+    "after_heldout": {
+      "top1_acc": 0.39894706054401874,
+      "top3_acc": 0.7505118455688798,
+      "top5_acc": 0.8941210880374378,
+      "mrr": 0.5914107438822268,
+      "macro_f1": 0.1495035915839698,
+      "weighted_f1": 0.23866224905335368
+    }
+  }
+}
