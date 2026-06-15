@@ -287,12 +287,12 @@ def build_ui():
     def set_default_question(task_type: str) -> str:
         return TASK_DEFAULTS.get(task_type, TASK_DEFAULTS["phase"])
 
-    def run_predict(image_path: str | None, task_type: str, question: str, mode: str):
+    async def run_predict(image_path: str | None, task_type: str, question: str, mode: str):
         if not image_path:
             return "Upload or select a surgical frame first.", [], "Upload or select a surgical frame first.", []
         with open(image_path, "rb") as handle:
             image_bytes = handle.read()
-        lora_answer, lora_rows, base_answer, base_rows = SurgicalGemma().compare.remote(
+        lora_answer, lora_rows, base_answer, base_rows = await SurgicalGemma().compare.remote.aio(
             image_bytes,
             task_type,
             question,
@@ -621,9 +621,13 @@ def create_simple_web_app():
 
 
 @app.function(image=image, timeout=1200, scaledown_window=600, max_containers=1)
+@modal.concurrent(max_inputs=20)
 @modal.asgi_app()
 def ui():
-    return create_simple_web_app()
+    from fastapi import FastAPI
+    from gradio.routes import mount_gradio_app
+
+    return mount_gradio_app(app=FastAPI(), blocks=build_ui(), path="/")
 
 
 @app.function(image=image, timeout=1200, scaledown_window=600, max_containers=1)
