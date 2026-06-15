@@ -70,6 +70,40 @@ The same page also has an `Upload & Predict` tab. Use `configs/mock_zero_shot.ya
 for a local UI demo, or use `configs/gemma4_12b_lora_hf_demo.yaml` on a GPU machine
 to load the published LoRA adapter from Hugging Face.
 
+## Modal GPU Demo
+
+For a live GPU demo with your published LoRA adapter, use the Modal/Gradio app:
+
+```bash
+python -m pip install -r requirements-modal.txt
+modal setup
+modal secret create huggingface-secret HF_TOKEN=hf_your_token_here
+modal serve modal_gradio_demo.py
+```
+
+When it works, deploy a persistent URL:
+
+```bash
+modal deploy modal_gradio_demo.py
+```
+
+The app uses `google/gemma-4-12B` with the LoRA adapter
+`SpringWang08/surgical-gemma4-12b-lora`, loaded in 4-bit on an A100-40GB GPU.
+It scales down after inactivity, so stop the serve command or delete the deployment when
+the demo is finished to avoid spending credits.
+
+By default, the Modal app supports image upload. If you have authorized CholecT50 frames
+locally and want a few preset examples, copy only a small held-out demo subset:
+
+```bash
+python scripts/prepare_demo_frames.py --limit 4 --image-root /path/to/surgical-video-assistant
+modal serve modal_gradio_demo.py
+```
+
+Do not commit raw surgical images. The `demo_samples/` folder is ignored except for
+`.gitkeep`. In the report, describe these preset images as held-out evaluation examples,
+not as unseen external clinical data.
+
 ## Optional VM Training
 
 If you rent a GPU VM, install the training dependencies:
